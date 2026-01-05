@@ -1,4 +1,6 @@
 import SignInForm from "@/features/auth/SignInForm";
+import SignUpForm from "@/features/auth/SignUpForm";
+import Image from "next/image";
 
 export default function SignInPage() {
     return (
@@ -6,7 +8,9 @@ export default function SignInPage() {
             {/* Logo & Title */}
             <div className="text-center mb-8">
                 <div className="inline-flex items-center justify-center w-20 h-20 bg-blue-600 rounded-2xl mb-4">
-                    <div className="w-11 h-12 bg-gray-200 border-2 border-dashed border-gray-400 rounded" />
+                    <Image src="/icons/inventa_icon_white.png" alt="Logo" width={44}
+                        height={48}
+                        className="rounded" />
                     {/* Ganti dengan logo asli nanti, ini placeholder */}
                 </div>
                 <h1 className="text-4xl font-normal text-stone-900">Inventa</h1>
@@ -26,7 +30,8 @@ export default function SignInPage() {
                 </div>
 
                 {/* Form */}
-                <SignInForm />
+                {/* <SignInForm /> */}
+                <SignUpForm />
             </div>
         </div>
     );
