@@ -1,9 +1,27 @@
+import { Lock, Mail, User } from 'lucide-react'
 import React from 'react'
-import { Mail, Lock } from 'lucide-react'
 
-export default function SignInForm() {
+export default function SignUpForm() {
     return (
         <form className="space-y-6">
+            {/* Nama */}
+                <div>
+                    <label className="block text-xl text-stone-900 mb-2">
+                        Nama
+                    </label>
+
+                    <div className="relative">
+                        <User
+                            className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400"
+                        />
+    
+                        <input
+                            type="text"
+                            className="w-full pl-12 pr-4 py-4 bg-white text-base text-neutral-600 rounded-xl border border-gray-300 focus:outline-none focus:border-blue-600"
+                            placeholder="Enter your nama"
+                        />
+                    </div>
+                </div>
             {/* Email */}
             <div>
                 <label className="block text-xl text-stone-900 mb-2">
