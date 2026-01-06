@@ -1,125 +1,87 @@
-// export default function TransactionPage() {
-//   return (
-//     <div className="w-[1280px] h-[1917px] relative bg-gray-50 overflow-hidden">
+"use client";
 
-import { ArrowLeft, Box } from "lucide-react";
+import { cn } from "@/common/libs/utils";
+import { Button } from "@/common/shadcn-ui/button";
+import { Calendar } from "@/common/shadcn-ui/calendar";
+import { Card } from "@/common/shadcn-ui/card";
+import {
+    Command,
+    CommandEmpty,
+    CommandGroup,
+    CommandInput,
+    CommandItem,
+    CommandList,
+} from "@/common/shadcn-ui/command";
+import { Input } from "@/common/shadcn-ui/input";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/common/shadcn-ui/popover";
+import { format } from "date-fns";
+import {
+    ArrowLeft,
+    Box,
+    CalendarIcon,
+    CheckIcon,
+    ChevronsUpDownIcon,
+} from "lucide-react";
+import React from "react";
 
-//       {/* ================= HEADER ================= */}
-//       <div className="w-[1208px] left-[36px] top-[50px] absolute inline-flex justify-center items-center gap-40">
-//         <div className="w-80 h-14 relative flex items-center gap-2.5">
+const frameworks = [
+    { value: "next.js", label: "Next.js" },
+    { value: "sveltekit", label: "SvelteKit" },
+    { value: "nuxt.js", label: "Nuxt.js" },
+    { value: "remix", label: "Remix" },
+    { value: "astro", label: "Astro" },
+];
 
-//           {/* Icon */}
-//           <div className="w-8 h-7 p-2.5 rounded-lg flex items-center justify-center">
-//             <img
-//               className="w-8 h-7 origin-top-left rotate-180"
-//               src="https://placehold.co/32x30"
-//               alt=""
-//             />
-//           </div>
+const typess = [
+    { value: "SALE", label: "Sale" },
+    { value: "PURCHASE", label: "Purchase" },
+    { value: "RETURN", label: "Return" },
+];
 
-//           {/* Title */}
-//           <div className="flex flex-col">
-//             <div className="text-black text-xl font-normal font-['Poppins'] leading-6">
-//               Record Daily Activity
-//             </div>
-//             <div className="text-neutral-600 text-sm font-normal font-['Poppins'] leading-6">
-//               Bulk input of sales and purchases
-//             </div>
-//           </div>
+type Row = {
+    date?: Date;
+    product: string;
+    quantity: string;
+    type: string;
+};
 
-//         </div>
-//       </div>
-
-//       {/* ================= INFO BANNER ================= */}
-//       <div className="w-[1208px] px-6 left-[36px] top-[159px] absolute bg-blue-600/5 rounded-2xl outline outline-[0.50px] outline-blue-600 flex flex-col gap-2.5">
-//         <div className="h-20 pl-3.5 pr-5 py-4 flex items-center gap-4">
-
-//           {/* Icon */}
-//           <img
-//             className="w-8 h-8"
-//             src="https://placehold.co/34x34"
-//             alt=""
-//           />
-
-//           {/* Description */}
-//           <p className="text-slate-700 text-base font-normal font-['Poppins']">
-//             Add transaction manually or paste CSV-style data. Stock levels will
-//             update immediately and triger an AI background job to re-evaluate
-//             recomendations.
-//           </p>
-
-//         </div>
-//       </div>
-
-//       {/* ================= MAIN CARD ================= */}
-//       <div className="w-[1208px] h-96 left-[36px] top-[285px] absolute bg-white rounded-2xl shadow overflow-hidden">
-
-//         {/* Title */}
-//         <div className="left-[24px] top-[24px] absolute">
-//           <div className="text-black text-xl font-normal font-['Poppins'] leading-8">
-//             Transaction Entry
-//           </div>
-//           <div className="text-neutral-600 text-sm font-normal font-['Poppins'] leading-8">
-//             Add rows for each transaction
-//           </div>
-//         </div>
-
-//         {/* Table Header */}
-//         <div className="w-full h-12 left-0 top-[108px] absolute bg-gray-50 outline outline-[0.5px] outline-zinc-500/50">
-//           <div className="absolute left-[23px] top-[10px] font-medium">Date</div>
-//           <div className="absolute left-[282px] top-[10px] font-medium">Product</div>
-//           <div className="absolute left-[656px] top-[10px] font-medium">Quantity</div>
-//           <div className="absolute left-[975px] top-[10px] font-medium">Type</div>
-//         </div>
-
-//         {/* Divider */}
-//         <div className="w-full h-px left-0 top-[244px] absolute bg-stone-300" />
-
-//         {/* Date Input */}
-//         <div className="w-48 h-12 left-[24px] top-[178px] absolute bg-white rounded-xl outline outline-neutral-400">
-//           <div className="px-4 py-2 text-black text-base font-['Poppins'] tracking-wide">
-//             6/7/2067
-//           </div>
-//         </div>
-
-//         {/* Product Select */}
-//         <div className="w-80 h-12 left-[282px] top-[178px] absolute bg-white rounded-xl outline outline-neutral-400 flex items-center justify-between px-4">
-//           <span className="text-black text-base">Select product...</span>
-//           <img className="w-4 h-4" src="https://placehold.co/16x16" alt="" />
-//         </div>
-
-//         {/* Quantity */}
-//         <div className="w-64 h-12 left-[656px] top-[178px] absolute bg-white rounded-xl outline outline-neutral-400 flex items-center px-4 text-neutral-400">
-//           0
-//         </div>
-
-//         {/* Type */}
-//         <div className="w-32 h-12 left-[975px] top-[178px] absolute bg-white rounded-xl outline outline-neutral-400 flex items-center justify-between px-4">
-//           <span>Sale</span>
-//           <img className="w-4 h-4" src="https://placehold.co/16x16" alt="" />
-//         </div>
-
-//         {/* Add Row */}
-//         <div className="w-32 h-10 left-[24px] top-[268px] absolute bg-white rounded-2xl outline outline-blue-700 flex items-center gap-2 px-3">
-//           <img className="w-5 h-5" src="https://placehold.co/19x19" alt="" />
-//           <span className="text-blue-700">Add Row</span>
-//         </div>
-
-//         {/* Submit */}
-//         <div className="w-[1020px] h-14 left-[24px] top-[328px] absolute bg-blue-600 rounded-2xl flex items-center justify-center text-white">
-//           Submit and Update Stock
-//         </div>
-
-//         {/* Cancel */}
-//         <div className="w-32 h-14 left-[1058px] top-[328px] absolute bg-white rounded-2xl outline outline-blue-700/40 flex items-center justify-center text-blue-700">
-//           Cancel
-//         </div>
-
-//       </div>
-//     </div>
-//   )
-// }
 export default function BulkTransactionPage() {
+    const [rows, setRows] = React.useState<Row[]>([
+        { date: undefined, product: "", quantity: "", type: "" },
+    ]);
+
+    const [openProductIndex, setOpenProductIndex] = React.useState<number | null>(null);
+    const [openTypeIndex, setOpenTypeIndex] = React.useState<number | null>(null);
+
+    const handleAddRow = () => {
+        setRows((prev) => [
+            ...prev,
+            { date: undefined, product: "", quantity: "", type: "" },
+        ]);
+    };
+
+    const updateRow = (index: number, data: Partial<Row>) => {
+        setRows((prev) =>
+            prev.map((row, i) => (i === index ? { ...row, ...data } : row))
+        );
+    };
+
+    const handleSubmit = () => {
+        console.log("BULK DATA:", rows);
+        alert("Submit berhasil. Cek console 🔥");
+    };
+
+    const handleCancel = () => {
+        if (!confirm("Yakin mau membatalkan dan menghapus semua input?")) return;
+
+        setRows([{ date: undefined, product: "", quantity: "", type: "" }]);
+    };
+
+
     return (
         <div className="p-10">
             <div className="flex items-center gap-4 mb-8">
@@ -138,16 +100,197 @@ export default function BulkTransactionPage() {
             </div>
 
             {/* INFO BANNER */}
-            <div className="w-full px-6 bg-blue-600/5 rounded-2xl  outline-[0.50px] outline-blue-600 flex flex-col gap-2.5">
+            <div className="w-full px-6 bg-blue-600/5 rounded-2xl outline-[0.50px] outline-blue-600 flex flex-col gap-2.5">
                 <div className="h-20 pl-3.5 pr-5 py-4 flex items-center gap-4">
                     <Box className="w-8 h-8 text-blue-600" size={32} />
                     <p className="text-slate-700 text-base font-normal font-['Poppins']">
                         Add transaction manually or paste CSV-style data. Stock levels will
-                        update immediately and triger an AI background job to re-evaluate
-                        recomendations.
+                        update immediately and trigger an AI background job to re-evaluate
+                        recommendations.
                     </p>
                 </div>
             </div>
+
+            <Card className="mt-8 w-full">
+                <div className="px-6">
+                    <div className="text-black text-xl font-normal font-['Poppins'] leading-8">
+                        Transaction Entry
+                    </div>
+                    <div className="text-neutral-600 text-sm font-normal font-['Poppins'] leading-8">
+                        Add rows for each transaction
+                    </div>
+                </div>
+
+                <div className="w-full grid grid-cols-4 outline outline-gray-200 items-center h-12 bg-gray-50 px-4">
+                    <div className="font-medium">Date</div>
+                    <div className="font-medium">Product</div>
+                    <div className="font-medium">Quantity</div>
+                    <div className="font-medium">Type</div>
+                </div>
+
+                <div className="space-y-4 py-4">
+                    {rows.map((row, index) => (
+                        <div key={index} className="w-full grid grid-cols-4 items-center gap-2 px-4">
+                            {/* Date */}
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button
+                                        variant="outline"
+                                        data-empty={!row.date}
+                                        className="data-[empty=true]:text-muted-foreground justify-start text-left font-normal"
+                                    >
+                                        <CalendarIcon />
+                                        {row.date ? format(row.date, "PPP") : <span>Pick a date</span>}
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-auto p-0">
+                                    <Calendar
+                                        mode="single"
+                                        selected={row.date}
+                                        onSelect={(d) => updateRow(index, { date: d })}
+                                    />
+                                </PopoverContent>
+                            </Popover>
+
+                            {/* Product */}
+                            <Popover
+                                open={openProductIndex === index}
+                                onOpenChange={(open) =>
+                                    setOpenProductIndex(open ? index : null)
+                                }
+                            >
+                                <PopoverTrigger asChild>
+                                    <Button
+                                        variant="outline"
+                                        role="combobox"
+                                        className="w-full justify-between"
+                                    >
+                                        {row.product
+                                            ? frameworks.find((f) => f.value === row.product)?.label
+                                            : "Select framework..."}
+                                        <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-50 p-0">
+                                    <Command>
+                                        <CommandInput placeholder="Search framework..." />
+                                        <CommandList>
+                                            <CommandEmpty>No framework found.</CommandEmpty>
+                                            <CommandGroup>
+                                                {frameworks.map((framework) => (
+                                                    <CommandItem
+                                                        key={framework.value}
+                                                        value={framework.value}
+                                                        onSelect={(value) => {
+                                                            updateRow(index, { product: value });
+                                                            setOpenProductIndex(null);
+                                                        }}
+                                                    >
+                                                        <CheckIcon
+                                                            className={cn(
+                                                                "mr-2 h-4 w-4",
+                                                                row.product === framework.value
+                                                                    ? "opacity-100"
+                                                                    : "opacity-0"
+                                                            )}
+                                                        />
+                                                        {framework.label}
+                                                    </CommandItem>
+                                                ))}
+                                            </CommandGroup>
+                                        </CommandList>
+                                    </Command>
+                                </PopoverContent>
+                            </Popover>
+
+                            {/* Quantity */}
+                            <Input
+                                placeholder="Quantity"
+                                value={row.quantity}
+                                onChange={(e) =>
+                                    updateRow(index, { quantity: e.target.value })
+                                }
+                            />
+
+                            {/* Type */}
+                            <Popover
+                                open={openTypeIndex === index}
+                                onOpenChange={(open) =>
+                                    setOpenTypeIndex(open ? index : null)
+                                }
+                            >
+                                <PopoverTrigger asChild>
+                                    <Button
+                                        variant="outline"
+                                        role="combobox"
+                                        className="w-full justify-between"
+                                    >
+                                        {row.type
+                                            ? typess.find((t) => t.value === row.type)?.label
+                                            : "Select type..."}
+                                        <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-50 p-0">
+                                    <Command>
+                                        <CommandInput placeholder="Search type..." />
+                                        <CommandList>
+                                            <CommandEmpty>No type found.</CommandEmpty>
+                                            <CommandGroup>
+                                                {typess.map((typ) => (
+                                                    <CommandItem
+                                                        key={typ.value}
+                                                        value={typ.value}
+                                                        onSelect={(value) => {
+                                                            updateRow(index, { type: value });
+                                                            setOpenTypeIndex(null);
+                                                        }}
+                                                    >
+                                                        <CheckIcon
+                                                            className={cn(
+                                                                "mr-2 h-4 w-4",
+                                                                row.type === typ.value
+                                                                    ? "opacity-100"
+                                                                    : "opacity-0"
+                                                            )}
+                                                        />
+                                                        {typ.label}
+                                                    </CommandItem>
+                                                ))}
+                                            </CommandGroup>
+                                        </CommandList>
+                                    </Command>
+                                </PopoverContent>
+                            </Popover>
+                        </div>
+                    ))}
+                </div>
+
+                <div className="px-6 pb-6">
+                    <button
+                        onClick={handleAddRow}
+                        className="mb-6 px-4 py-2  outline-2 outline-blue-600 text-blue-600 rounded-lg transition w-32"
+                    >
+                        + Add Row
+                    </button>
+
+                    <div className="flex items-center gap-4 w-full">
+                        <button
+                            onClick={handleSubmit}
+                            className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                        >
+                            Submit
+                        </button>
+
+                        <button onClick={handleCancel} className="w-32 py-2  outline-2 outline-blue-600 text-blue-600 rounded-lg transition">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </Card>
+            <pre className="mt-6 bg-gray-900 text-green-400 text-xs p-4 rounded-lg overflow-auto max-h-80">
+                {JSON.stringify(rows, null, 2)}
+            </pre>
         </div>
-    )
+    );
 }
