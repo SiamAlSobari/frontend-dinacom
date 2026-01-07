@@ -59,6 +59,8 @@ export function BulkTransactionRow({
     setOpenTypeIndex,
 }: Props) {
     return (
+        <div  className="w-full">
+
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 px-4">
             {/* Date */}
             <div className="space-y-1.5">
@@ -185,6 +187,8 @@ export function BulkTransactionRow({
                     </PopoverContent>
                 </Popover>
             </div>
+        </div>
+        <hr className="mt-5" />
         </div>
     )
 }

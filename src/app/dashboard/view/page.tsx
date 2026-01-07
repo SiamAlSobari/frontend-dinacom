@@ -1,6 +1,7 @@
 "use client"
+import BannerInfoAdjust from "@/features/dashboard/view-stock/adjust/BannerInfoAdjust"
 import StockSearchBar from "@/features/dashboard/view-stock/StockSearchBar"
-import StockTable from "@/features/dashboard/view-stock/StockTable"
+import StockTable from "@/features/dashboard/view-stock/view/StockTable"
 import { ArrowLeft } from "lucide-react"
 import React from "react"
 
@@ -41,8 +42,15 @@ export default function ViewStockPage() {
       {/* Search */}
       <StockSearchBar tabs={tab} setTabs={(value) => setTab(value as "view" | "adjust")} search={search} setSearch={setSearch} />
 
-      {/* Table */}
-      <StockTable items={filteredStock} />
+      {/* Table View */}
+      {tab === "adjust" ? (
+        <>
+        <BannerInfoAdjust />
+        </>
+      ) : (
+
+        <StockTable items={filteredStock} />
+      )}
     </div>
   )
 }

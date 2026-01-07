@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader } from '@/common/shadcn-ui/card'
 import StockTableHeader from './StockTableHeader'
-import StockTableRow from './StockTableRow'
 import StockTableRowMobile from './StokTableRowMobile'
+import StockTableRow from './StockTableRow'
 
 interface StockItem {
   name: string
