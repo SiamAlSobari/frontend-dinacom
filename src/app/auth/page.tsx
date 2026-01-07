@@ -48,7 +48,7 @@ export default function AuthPage() {
             <div className="flex justify-center gap-2 mb-6">
               <button
                 onClick={() => setTab('signin')}
-                className={`px-6 py-2 text-sm rounded-lg transition
+                className={`px-6 py-2 w-full text-sm rounded-lg transition
                   ${tab === 'signin'
                     ? 'bg-blue-600 text-white'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -59,7 +59,7 @@ export default function AuthPage() {
 
               <button
                 onClick={() => setTab('signup')}
-                className={`px-6 py-2 text-sm rounded-lg transition
+                className={`px-6 py-2 w-full text-sm rounded-lg transition
                   ${tab === 'signup'
                     ? 'bg-blue-600 text-white'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
