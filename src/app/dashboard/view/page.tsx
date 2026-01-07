@@ -1,12 +1,16 @@
+"use client"
+
 import { Card, CardContent, CardHeader } from '@/common/shadcn-ui/card'
 import { Input } from '@/common/shadcn-ui/input'
 import ProductBackgroundColor from '@/features/dashboard/view/ProductBackgroundColor'
 import StatusBadgeColor from '@/features/dashboard/view/StatusBadgeColor'
 import UnitStockViewColor from '@/features/dashboard/view/UnitStockViewColor'
 import { ArrowLeft } from 'lucide-react'
+import React from 'react'
 
 
 export default function ViewStockPage() {
+    const [search, setSearch] = React.useState('')
     const stockItems = [
         {
             name: "Product A",
@@ -46,6 +50,13 @@ export default function ViewStockPage() {
         },
     ]
 
+    const filteredStock = stockItems.filter(item =>
+        item.name.toLowerCase().includes(search.toLowerCase()) ||
+        item.caregory.toLowerCase().includes(search.toLowerCase()) ||
+        item.status.toLowerCase().includes(search.toLowerCase())
+    )
+
+
     return (
         <div className="p-10">
             <div className="flex items-center gap-4 mb-8">
@@ -66,14 +77,14 @@ export default function ViewStockPage() {
             <Card>
                 <CardContent>
                     <div className='flex'>
-                        <Input className='p-5 flex-1' placeholder="Search stock items..." />
+                        <Input onChange={(e) => setSearch(e.target.value)} className='p-5 flex-1' placeholder="Search stock items..." />
                         <button className='ml-4 px-6 bg-blue-600 text-white rounded-lg font-medium'>Search</button>
                         <button className='ml-4 px-6 bg-gray-400/15 text-gray-500 rounded-lg font-medium' >Quick Adjust</button>
                     </div>
                 </CardContent>
             </Card>
             <Card className='mt-10 pt-0'>
-                <CardHeader className="py-4 border-b-2 border-gray-500/30 rounded-tl-xl rounded-tr-xl bg-gray-300/40">
+                <CardHeader className="py-4 border-b-2 border-gray-500/10 rounded-tl-xl rounded-tr-xl bg-gray-300/15">
                     <div className="grid grid-cols-[2fr_1fr_1fr_1fr_1fr_1fr] items-center px-2">
                         <div className="font-semibold text-xl">Product</div>
                         <div className="font-semibold text-xl text-center">Current Stock</div>
@@ -85,7 +96,7 @@ export default function ViewStockPage() {
                 </CardHeader>
 
                 <CardContent>
-                    {stockItems.map((item, index) => (
+                    {filteredStock.map((item, index) => (
                         <div
                             key={index}
                             className="grid grid-cols-[2fr_1fr_1fr_1fr_1fr_1fr] items-center py-4  px-2"
@@ -110,12 +121,12 @@ export default function ViewStockPage() {
 
                             {/* Day left */}
                             <div className="font-medium text-lg text-center">
-                               ~ {item.day_left} days
+                                ~ {item.day_left} days
                             </div>
 
                             {/* Category */}
                             <div className="font-medium text-lg text-center">
-                                 {item.caregory}
+                                {item.caregory}
                             </div>
                         </div>
                     ))}
