@@ -8,7 +8,6 @@ import { BulkTableHeader } from "@/features/dashboard/bulk/BulkTableHeader"
 import { ArrowLeft } from "lucide-react"
 import React from "react"
 
-
 export default function BulkTransactionPage() {
     const [rows, setRows] = React.useState<BulkRow[]>([
         { date: undefined, product: "", quantity: "", type: "" },
@@ -41,12 +40,11 @@ export default function BulkTransactionPage() {
     }
 
     return (
-        <div className="p-10">
+        <div className="p-6 md:p-10 min-h-screen">
             <div className="flex items-center gap-4 mb-8">
                 <button>
                     <ArrowLeft className="text-gray-600" size={24} />
                 </button>
-
                 <div className="flex flex-col">
                     <div className="text-black text-xl font-normal font-['Poppins'] leading-6">
                         Record Daily Activity
@@ -60,7 +58,7 @@ export default function BulkTransactionPage() {
             <BulkInfoBanner />
 
             <Card className="mt-8 w-full">
-                <div className="px-6">
+                <div className="px-6 pt-6">
                     <div className="text-black text-xl font-normal font-['Poppins'] leading-8">
                         Transaction Entry
                     </div>
@@ -71,7 +69,7 @@ export default function BulkTransactionPage() {
 
                 <BulkTableHeader />
 
-                <div className="space-y-4 py-4">
+                <div className="space-y-6 py-4">
                     {rows.map((row, index) => (
                         <BulkTransactionRow
                             key={index}
@@ -86,25 +84,24 @@ export default function BulkTransactionPage() {
                     ))}
                 </div>
 
-                <div className="px-6 pb-6">
+                <div className="px-6 pb-6 space-y-4">
                     <button
                         onClick={handleAddRow}
-                        className="mb-6 px-4 py-2 outline-2 outline-blue-600 text-blue-600 rounded-lg transition w-32"
+                        className="w-full md:w-auto px-4 py-2 outline-2 outline-blue-600 text-blue-600 rounded-lg transition"
                     >
                         + Add Row
                     </button>
 
-                    <div className="flex items-center gap-4 w-full">
+                    <div className="flex flex-col md:flex-row gap-4">
                         <button
                             onClick={handleSubmit}
-                            className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                            className="flex-1 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
                         >
                             Submit
                         </button>
-
                         <button
                             onClick={handleCancel}
-                            className="w-32 py-2 outline-2 outline-blue-600 text-blue-600 rounded-lg transition"
+                            className="px-8 py-3 outline-2 outline-blue-600 text-blue-600 rounded-lg transition"
                         >
                             Cancel
                         </button>

@@ -1,12 +1,13 @@
 "use client"
-
+import BannerInfoAdjust from "@/features/dashboard/view-stock/adjust/BannerInfoAdjust"
 import StockSearchBar from "@/features/dashboard/view-stock/StockSearchBar"
-import StockTable from "@/features/dashboard/view-stock/StockTable"
+import StockTable from "@/features/dashboard/view-stock/view/StockTable"
 import { ArrowLeft } from "lucide-react"
 import React from "react"
 
 export default function ViewStockPage() {
   const [search, setSearch] = React.useState("")
+  const [tab, setTab] = React.useState<"view" | "adjust">("view")
 
   const stockItems = [
     { name: "Product A", stock_in: 5, stock_out: 3, status: "Critical", day_left: 10, caregory: "Category 1", image: "saas.png" },
@@ -22,13 +23,12 @@ export default function ViewStockPage() {
   )
 
   return (
-    <div className="p-10">
+    <div className="p-4 sm:p-6 lg:p-10 min-h-screen bg-gray-50">
       {/* Page Header */}
       <div className="flex items-center gap-4 mb-8">
         <button>
           <ArrowLeft className="text-gray-600" size={24} />
         </button>
-
         <div className="flex flex-col">
           <div className="text-black text-xl font-normal leading-6">
             Stock Management
@@ -40,10 +40,17 @@ export default function ViewStockPage() {
       </div>
 
       {/* Search */}
-      <StockSearchBar search={search} setSearch={setSearch} />
+      <StockSearchBar tabs={tab} setTabs={(value) => setTab(value as "view" | "adjust")} search={search} setSearch={setSearch} />
 
-      {/* Table */}
-      <StockTable items={filteredStock} />
+      {/* Table View */}
+      {tab === "adjust" ? (
+        <>
+        <BannerInfoAdjust />
+        </>
+      ) : (
+
+        <StockTable items={filteredStock} />
+      )}
     </div>
   )
 }
