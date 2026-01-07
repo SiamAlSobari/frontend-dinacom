@@ -1,13 +1,13 @@
 'use client'
 
-import React, { useState } from 'react'
+import React from 'react'
 import { Card } from '@/common/shadcn-ui/card'
 import SignInForm from '@/features/auth/SignInForm'
 import SignUpForm from '@/features/auth/SignUpForm'
 import Image from 'next/image'
 
 export default function AuthPage() {
-  const [tab, setTab] = useState<'signin' | 'signup'>('signin')
+  const [tab, setTab] = React.useState<'signin' | 'signup'>('signin')
 
   return (
     <div className="min-h-screen flex flex-col lg:flex-row overflow-hidden">

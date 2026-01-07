@@ -2,28 +2,22 @@ import ProductBackgroundColor from "./ProductBackgroundColor";
 import StatusBadgeColor from "./StatusBadgeColor";
 import UnitStockViewColor from "./UnitStockViewColor";
 
-
 export default function StockTableRow({ item }: { item: any }) {
   return (
-    <div className="grid grid-cols-[2fr_1fr_1fr_1fr_1fr_1fr] items-center py-4 px-2">
+    <div className="grid grid-cols-[2fr_1fr_1fr_1fr_1fr_1fr] items-center py-4 px-7 border-b border-gray-100 last:border-0">
       <ProductBackgroundColor name={item.name} status={item.status} />
-
       <div className={`font-medium text-lg text-center px-2 py-1 rounded-lg ${UnitStockViewColor(item.stock_in)}`}>
         {item.stock_in} Units
       </div>
-
       <div className="font-medium text-lg text-center">
         {item.stock_out}
       </div>
-
       <div className="font-medium text-lg text-center">
         {StatusBadgeColor(item.status)}
       </div>
-
       <div className="font-medium text-lg text-center">
         ~ {item.day_left} days
       </div>
-
       <div className="font-medium text-lg text-center">
         {item.caregory}
       </div>
