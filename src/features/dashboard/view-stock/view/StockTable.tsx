@@ -15,8 +15,8 @@ interface StockItem {
 
 export default function StockTable({ items }: { items: StockItem[] }) {
   return (
-    <Card className="mt-6 py-0 lg:mt-10">
-      <CardHeader className="hidden lg:block py-4 border-b border-gray-500/10 rounded-tl-xl rounded-tr-xl bg-gray-300/15">
+    <Card className="mt-6 lg:mt-8 shadow-sm">
+      <CardHeader className="hidden lg:block py-0 border-b border-gray-200 bg-gray-50/50">
         <StockTableHeader />
       </CardHeader>
 
