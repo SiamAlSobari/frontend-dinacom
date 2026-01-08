@@ -31,6 +31,15 @@ class AuthService {
             throw error.response?.data || { success: false, message: 'Sign up failed' };
         }
     }
+
+    public async session() {
+        try {
+            const response = await apiClient({ method: 'get', url: '/auth/session' });
+            return response;
+        } catch (error: any) {
+            throw error.response?.data || { success: false, message: 'Fetch session failed' };
+        }
+    }
 }
 
 export default new AuthService();
