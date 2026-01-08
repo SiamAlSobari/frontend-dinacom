@@ -1,5 +1,4 @@
-import { Pen, Pencil } from 'lucide-react'
-import React from 'react'
+import {  Pencil } from 'lucide-react'
 
 export default function BannerInfoAdjust() {
   return (

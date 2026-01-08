@@ -1,5 +1,6 @@
 "use client"
 import BannerInfoAdjust from "@/features/dashboard/view-stock/adjust/BannerInfoAdjust"
+import ProductCard from "@/features/dashboard/view-stock/adjust/ProductCard"
 import StockSearchBar from "@/features/dashboard/view-stock/StockSearchBar"
 import StockTable from "@/features/dashboard/view-stock/view/StockTable"
 import { ArrowLeft } from "lucide-react"
@@ -44,11 +45,13 @@ export default function ViewStockPage() {
 
       {/* Table View */}
       {tab === "adjust" ? (
-        <>
+        <div className="flex flex-col gap-4">
         <BannerInfoAdjust />
-        </>
+        {filteredStock.map((item, index) => (
+          <ProductCard key={index} {...item}   />
+        ))}
+        </div>
       ) : (
-
         <StockTable items={filteredStock} />
       )}
     </div>
