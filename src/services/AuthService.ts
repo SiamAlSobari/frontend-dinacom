@@ -14,31 +14,21 @@ interface SignUpPayload {
 
 class AuthService {
     public async signIn(payload: SignInPayload) {
-        try {
-            const response = await apiClient({ method: 'post', url: '/auth/login', data: payload });
-            return response;
-        } catch (error: any) {
-            throw error.response?.data || { success: false, message: 'Sign in failed' };
-        }
+        const response = await apiClient({ method: 'post', url: '/auth/login', data: payload });
+        return response;
+
     }
 
     // Sign Up / Register
     public async signUp(payload: SignUpPayload) {
-        try {
-            const response = await apiClient({ method: 'post', url: '/auth/register', data: payload });
-            return response;
-        } catch (error: any) {
-            throw error.response?.data || { success: false, message: 'Sign up failed' };
-        }
+        const response = await apiClient({ method: 'post', url: '/auth/register', data: payload });
+        return response;
     }
 
     public async session() {
-        try {
-            const response = await apiClient({ method: 'get', url: '/auth/session' });
-            return response;
-        } catch (error: any) {
-            throw error.response?.data || { success: false, message: 'Fetch session failed' };
-        }
+        const response = await apiClient({ method: 'get', url: '/auth/session' });
+        return response;
+
     }
 }
 
