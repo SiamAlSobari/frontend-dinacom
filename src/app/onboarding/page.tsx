@@ -14,7 +14,7 @@ const onboardingSteps = [
         description:
             'Upload data files from your POS system. We seamlessly integrate and get daily purchase updates.',
         skipButton: true,
-        background: '/backgrounds/onboarding_bg.png',
+        background: '/backgrounds/onboarding_bg_1.png',
     },
     {
         icon: Table,
@@ -23,7 +23,7 @@ const onboardingSteps = [
         description:
             "We'll try to match them to your file, but you might need to map a few columns to ensure accuracy.",
         skipButton: false,
-        background: '/backgrounds/onboarding_bg.png',
+        background: '/backgrounds/onboarding_bg_1.png',
     },
     {
         icon: BarChart3,
@@ -32,7 +32,7 @@ const onboardingSteps = [
         description:
             'View real-time insights on sales trends, stock levels and product performance - all in one place',
         skipButton: false,
-        background: '/backgrounds/onboarding_bg.png',
+        background: '/backgrounds/onboarding_bg_1.png',
     },
     {
         icon: Lightbulb,
@@ -41,7 +41,7 @@ const onboardingSteps = [
         description:
             'Receive AI-powered suggestions on what to order and when based on your sales patterns',
         skipButton: false,
-        background: '/backgrounds/onboarding_bg.png',
+        background: '/backgrounds/onboarding_bg_1.png',
     },
 ];
 
@@ -71,7 +71,7 @@ export default function OnboardingPage() {
     const Icon = currentStepData.icon;
 
     return (
-        <div className='min-h-screen bg-linear-to-br from-blue-50 to-indigo-50 flex items-center justify-center p-4 relative overflow-hidden'>
+        <div className='min-h-screen bg-linear-to-br from-blue-600 to-indigo-800/45 flex items-center justify-center p-4 relative overflow-hidden'>
             {/* Background Image */}
             <AnimatePresence mode='wait'>
                 <motion.div

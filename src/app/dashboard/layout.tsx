@@ -7,7 +7,6 @@ export default function layout({ children }: { children: React.ReactNode }) {
         <>
             <AuthGuard>
                 <BusinessGuard>
-
                     {children}
                 </BusinessGuard>
             </AuthGuard>
