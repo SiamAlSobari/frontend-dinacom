@@ -1,99 +1,33 @@
 "use client"
 
-import HeaderDashboardIndex from '@/features/dashboard/index/HeaderDashboardIndex'
 import React from 'react'
-import { TrendingUp, Package, BarChart3, CheckCircle, AlertCircle, TriangleAlert } from 'lucide-react'
+import { CheckCircle, TriangleAlert } from 'lucide-react'
 import { Card } from '@/common/shadcn-ui/card'
 import Link from "next/link"
 
 export default function DashboardRootPage() {
 
-  const quickActions = [
-    {
-      label: "Recent Activity",
-      href: "/dashboard/activity",
-      icon: TrendingUp,
-    },
-    {
-      label: "Recommendations",
-      href: "/dashboard/recommendation",
-      icon: CheckCircle,
-    },
-    {
-      label: "Insights",
-      href: "/dashboard/insights",
-      icon: BarChart3,
-    },
-    {
-      label: "Stock",
-      href: "/dashboard/view",
-      icon: Package,
-    },
-  ]
-
   const stockAlerts = [
-    {
-      id: 1,
-      product: "Dark Chocolate Bar 100g",
-      stock: "Only 2 units left. Restock urgently",
-      priority: "critical",
-    },
-    {
-      id: 2,
-      product: "Greek Yogurt 500g",
-      stock: "Only 5 units left. High demand item",
-      priority: "high",
-    },
-    {
-      id: 3,
-      product: "Whole Wheat Bread",
-      stock: "Only 8 units left. Restock urgently",
-      priority: "moderate",
-    },
-    {
-      id: 4,
-      product: "Almond Milk 1L",
-      stock: "Below average stock level",
-      priority: "low",
-    }
+    { id: 1, product: "Dark Chocolate Bar 100g", stock: "Only 2 units left. Restock urgently", priority: "critical" },
+    { id: 2, product: "Greek Yogurt 500g", stock: "Only 5 units left. High demand item", priority: "high" },
+    { id: 3, product: "Whole Wheat Bread", stock: "Only 8 units left. Restock urgently", priority: "moderate" },
+    { id: 4, product: "Almond Milk 1L", stock: "Below average stock level", priority: "low" }
   ]
 
   const topProducts = [
-    {
-      rank: 1,
-      name: "Avocado (single)",
-      sold: 312
-    },
-    {
-      rank: 2,
-      name: "Organic Bananas (bunch)",
-      sold: 234
-    },
-    {
-      rank: 3,
-      name: "Almond Milk 1L",
-      sold: 203
-    },
-    {
-      rank: 4,
-      name: "Whole Wheat Bread",
-      sold: 188
-    },
-    {
-      rank: 5,
-      name: "Teh Pucuk",
-      sold: 167
-    }
+    { rank: 1, name: "Avocado (single)", sold: 312 },
+    { rank: 2, name: "Organic Bananas (bunch)", sold: 234 },
+    { rank: 3, name: "Almond Milk 1L", sold: 203 },
+    { rank: 4, name: "Whole Wheat Bread", sold: 188 },
+    { rank: 5, name: "Teh Pucuk", sold: 167 }
   ]
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case 'critical':
-        return 'bg-red-50 border-red-200 text-red-700'
       case 'high':
         return 'bg-red-50 border-red-200 text-red-700'
       case 'moderate':
-        return 'bg-amber-50 border-amber-200 text-amber-700'
       case 'low':
         return 'bg-amber-50 border-amber-200 text-amber-700'
       default:
@@ -103,19 +37,9 @@ export default function DashboardRootPage() {
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 min-h-screen bg-gray-50">
-      
+
       {/* Header */}
       <div className="mb-8">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
-            <span className="text-white font-bold text-lg">I</span>
-          </div>
-          <div>
-            <h1 className="text-xl font-semibold text-gray-900">Inventa</h1>
-            <p className="text-sm text-gray-500">Dashboard</p>
-          </div>
-        </div>
-
         <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-start gap-3 mt-4">
           <CheckCircle className="text-green-600 flex-shrink-0 mt-0.5" size={20} />
           <div>
@@ -125,52 +49,11 @@ export default function DashboardRootPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-4 gap-4 mb-8">
-        {quickActions.map((action) => {
-          const Icon = action.icon
+      {/* ===== TOP GRID ===== */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
 
-          return (
-            <Link
-              key={action.label}
-              href={action.href}
-              className="flex flex-col items-center justify-center p-4 bg-white rounded-xl border border-gray-200 hover:border-blue-500 hover:shadow-sm transition-all"
-            >
-              <Icon className="text-blue-600 mb-2" size={24} />
-              <span className="text-xs font-medium text-gray-700">
-                {action.label}
-              </span>
-            </Link>
-          )
-        })}
-      </div>
-
-      {/* Stock Alerts */}
-      <div className="mb-8">
-        <h2 className="text-base font-semibold text-gray-900 mb-4">Stock Alerts</h2>
-        <div className="space-y-3">
-          {stockAlerts.map((alert) => (
-            <div
-              key={alert.id}
-              className={`flex items-center justify-between p-4 rounded-lg border ${getPriorityColor(alert.priority)}`}
-            >
-              <div className="flex items-center gap-3">
-                <span className="text-lg"><TriangleAlert /></span>
-                <div>
-                  <p className="font-semibold text-sm">{alert.product}</p>
-                  <p className="text-xs">{alert.stock}</p>
-                </div>
-              </div>
-              <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
-                View
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-        <Card className="lg:col-span-1 bg-white rounded-xl border border-gray-200 p-6">
+        {/* CHART - LEBAR */}
+        <Card className="lg:col-span-8 bg-white rounded-xl border border-gray-200 p-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-semibold text-gray-900">Sales Overview</h3>
             <div className="flex gap-2">
@@ -178,51 +61,77 @@ export default function DashboardRootPage() {
               <button className="px-3 py-1 bg-gray-200 rounded text-xs">Month</button>
             </div>
           </div>
-          <div className="bg-gray-100 rounded-lg h-64 flex items-center justify-center">
+
+          <div className="bg-gray-100 rounded-lg h-72 flex items-center justify-center">
             <span className="text-gray-400 text-sm">Chart Placeholder</span>
           </div>
         </Card>
 
-        <div className="space-y-4">
-          <Card className="bg-white rounded-xl border border-gray-200 p-5">
-            <h3 className="font-semibold text-gray-900 mb-4 text-sm">Top 5 Product</h3>
-            <div className="space-y-4">
-              {topProducts.map((product) => (
-                <div key={product.rank} className="relative">
-                  <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <span className="text-blue-600 font-bold text-sm">{product.rank}</span>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium text-gray-900 text-sm">{product.name}</p>
-                      <p className="text-xs text-gray-500">{product.sold} sold</p>
-                    </div>
+        {/* TOP PRODUCT - KECIL */}
+        <Card className="lg:col-span-4 bg-white rounded-xl border border-gray-200 p-5">
+          <h3 className="font-semibold text-gray-900 mb-4 text-sm">Top 5 Product</h3>
+
+          <div className="space-y-4">
+            {topProducts.map((product) => (
+              <div key={product.rank}>
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <span className="text-blue-600 font-bold text-sm">{product.rank}</span>
                   </div>
-                  {product.rank < 5 && (
-                    <div className="mt-3 ml-5 border-b border-pink-400"></div>
-                  )}
+                  <div className="flex-1">
+                    <p className="font-medium text-gray-900 text-sm">{product.name}</p>
+                    <p className="text-xs text-gray-500">{product.sold} sold</p>
+                  </div>
                 </div>
-              ))}
-            </div>
-          </Card>
-        </div>
+                {product.rank < 5 && <div className="mt-3 ml-5 border-b border-pink-400"></div>}
+              </div>
+            ))}
+          </div>
+        </Card>
       </div>
 
-      {/* Bottom */}
-      <Card className="bg-white rounded-xl border border-gray-200 p-4">
-        <h3 className="font-semibold text-gray-900 mb-3 text-sm">Recent Activity</h3>
-        <div className="space-y-3">
-          {[1,2,3,4,5].map((i) => (
-            <div key={i} className="flex items-center gap-3">
-              <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
-              <div className="flex-1">
-                <div className="h-3 bg-gray-300 rounded w-full mb-1"></div>
-                <div className="h-2 bg-gray-200 rounded w-3/4"></div>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        {/* STOCK ALERT - LEBAR */}
+        <div className="lg:col-span-8">
+          <h2 className="text-base font-semibold text-gray-900 mb-4">Stock Alerts</h2>
+          <div className="space-y-3">
+            {stockAlerts.map((alert) => (
+              <div
+                key={alert.id}
+                className={`flex items-center justify-between p-4 rounded-lg border ${getPriorityColor(alert.priority)}`}
+              >
+                <div className="flex items-center gap-3">
+                  <TriangleAlert />
+                  <div>
+                    <p className="font-semibold text-sm">{alert.product}</p>
+                    <p className="text-xs">{alert.stock}</p>
+                  </div>
+                </div>
+                <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                  View
+                </button>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </Card>
+
+        {/* RECENT ACTIVITY - KECIL */}
+        <Card className="lg:col-span-4 bg-white rounded-xl border border-gray-200 p-4">
+          <h3 className="font-semibold text-gray-900 mb-3 text-sm">Recent Activity</h3>
+          <div className="space-y-3">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div key={i} className="flex items-center gap-3">
+                <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
+                <div className="flex-1">
+                  <div className="h-3 bg-gray-300 rounded w-full mb-1"></div>
+                  <div className="h-2 bg-gray-200 rounded w-3/4"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Card>
+      </div>
     </div>
   )
 }

@@ -75,16 +75,7 @@ export default function RecommendationPage() {
 
 
   return (
-    <div className="p-4 sm:p-6 lg:p-10 min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="flex items-center gap-4 mb-8">
-        <button>
-          <ArrowLeft className="text-gray-600" size={24} />
-        </button>
-        <div className="flex flex-col">
-          <h1 className="text-xl font-semibold text-gray-900">Restock Alerts</h1>
-        </div>
-      </div>
+    <div className='mt-9'>
 
       {/* Info Banner */}
       <div className="bg-linear-to-r from-purple-600 to-purple-700 rounded-xl p-6 mb-6 text-white">
