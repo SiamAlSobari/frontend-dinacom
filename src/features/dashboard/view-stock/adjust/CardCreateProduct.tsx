@@ -4,6 +4,8 @@ import { Card } from "@/common/shadcn-ui/card"
 import React from "react"
 import { CreateProductRow } from "./CreateProductRow"
 import { CreateProductHeader } from "./CreateProductHeader"
+import { useMutation } from "@tanstack/react-query"
+import ProductService from "@/services/ProductService"
 
 // Tipe data yang sesuai dengan validasi backend
 export type ProductFormData = {
@@ -14,26 +16,35 @@ export type ProductFormData = {
   price: string
 }
 
+
 export default function CardCreateProduct() {
+
+  const { mutate: createProduct } = useMutation({
+    mutationFn: ProductService.createProduct,
+    mutationKey: ["create-product"],
+    onSuccess: () => {
+      alert("Produk berhasil dibuat!")
+    },
+  })
   const [rows, setRows] = React.useState<ProductFormData[]>([
-    { 
-      image: null, 
-      name: "", 
-      unit: "PCS", 
-      stock: "", 
-      price: "" 
+    {
+      image: null,
+      name: "",
+      unit: "PCS",
+      stock: "",
+      price: ""
     },
   ])
 
   const handleAddRow = () => {
     setRows((prev) => [
       ...prev,
-      { 
-        image: null, 
-        name: "", 
-        unit: "PCS", 
-        stock: "", 
-        price: "" 
+      {
+        image: null,
+        name: "",
+        unit: "PCS",
+        stock: "",
+        price: ""
       },
     ])
   }
@@ -47,7 +58,7 @@ export default function CardCreateProduct() {
   const handleSubmit = () => {
     // Validasi sebelum submit
     const errors: string[] = []
-    
+
     rows.forEach((row, index) => {
       // Validasi image
       if (!row.image) {
@@ -55,49 +66,48 @@ export default function CardCreateProduct() {
       } else if (!["image/jpeg", "image/png", "image/jpg"].includes(row.image.type)) {
         errors.push(`Row ${index + 1}: File harus berupa gambar (JPEG/PNG/JPG)`)
       }
-      
+
       // Validasi name
       if (row.name.length < 3) {
         errors.push(`Row ${index + 1}: Nama minimal 3 karakter`)
       }
-      
+
       // Validasi stock
       const stockNum = Number(row.stock)
       if (isNaN(stockNum) || stockNum < 0) {
         errors.push(`Row ${index + 1}: Stok harus angka valid`)
       }
-      
+
       // Validasi price
       const priceNum = Number(row.price)
       if (isNaN(priceNum) || priceNum < 0) {
         errors.push(`Row ${index + 1}: Harga harus angka dan minimal 0`)
       }
     })
-    
+
     if (errors.length > 0) {
       alert(`Validasi gagal:\n${errors.join('\n')}`)
       return
     }
-    
+
     // Jika validasi berhasil, konversi ke format yang sesuai
     const formattedData = rows.map(row => ({
       ...row,
       stock: Number(row.stock),
       price: Number(row.price)
     }))
-    
-    console.log("PRODUCT DATA:", formattedData)
-    alert("Submit berhasil. Cek console 🔥")
+    // Panggil mutation untuk submit data
+    createProduct(formattedData)
   }
 
   const handleCancel = () => {
     if (!confirm("Yakin mau membatalkan dan menghapus semua input?")) return
-    setRows([{ 
-      image: null, 
-      name: "", 
-      unit: "PCS", 
-      stock: "", 
-      price: "" 
+    setRows([{
+      image: null,
+      name: "",
+      unit: "PCS",
+      stock: "",
+      price: ""
     }])
   }
 
@@ -111,9 +121,9 @@ export default function CardCreateProduct() {
           Add product details for each row
         </div>
       </div>
-      
+
       <CreateProductHeader />
-      
+
       <div className="space-y-6 py-4">
         {rows.map((row, index) => (
           <CreateProductRow

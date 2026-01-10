@@ -4,12 +4,19 @@ import CardCreateProduct from "@/features/dashboard/view-stock/adjust/CardCreate
 import ProductCard from "@/features/dashboard/view-stock/adjust/ProductCard"
 import StockSearchBar from "@/features/dashboard/view-stock/StockSearchBar"
 import StockTable from "@/features/dashboard/view-stock/view/StockTable"
+import ProductService from "@/services/ProductService"
+import { useQuery } from "@tanstack/react-query"
 import { ArrowLeft } from "lucide-react"
 import React from "react"
 
 export default function ViewStockPage() {
   const [search, setSearch] = React.useState("")
   const [tab, setTab] = React.useState<"view" | "adjust">("view")
+
+  const {data} = useQuery({
+    queryKey: ["product-sold-stats"],
+    queryFn: () => ProductService.getProductSoldStats(),
+  })
 
   const stockItems = [
     { name: "Product A", stock_in: 5, stock_out: 3, status: "Critical", day_left: 10, caregory: "Category 1", image: "saas.png" },
