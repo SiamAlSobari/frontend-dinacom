@@ -1,5 +1,6 @@
 "use client"
 import BannerInfoAdjust from "@/features/dashboard/view-stock/adjust/BannerInfoAdjust"
+import CardCreateProduct from "@/features/dashboard/view-stock/adjust/CardCreateProduct"
 import ProductCard from "@/features/dashboard/view-stock/adjust/ProductCard"
 import StockSearchBar from "@/features/dashboard/view-stock/StockSearchBar"
 import StockTable from "@/features/dashboard/view-stock/view/StockTable"
@@ -25,20 +26,6 @@ export default function ViewStockPage() {
 
   return (
     <div className="p-4 sm:p-6 lg:p-10 min-h-screen bg-gray-50">
-      {/* Page Header */}
-      <div className="flex items-center gap-4 mb-8">
-        <button>
-          <ArrowLeft className="text-gray-600" size={24} />
-        </button>
-        <div className="flex flex-col">
-          <div className="text-black text-xl font-normal leading-6">
-            Stock Management
-          </div>
-          <div className="text-neutral-600 text-sm font-normal leading-6">
-            100+ products in stock
-          </div>
-        </div>
-      </div>
 
       {/* Search */}
       <StockSearchBar tabs={tab} setTabs={(value) => setTab(value as "view" | "adjust")} search={search} setSearch={setSearch} />
@@ -47,6 +34,7 @@ export default function ViewStockPage() {
       {tab === "adjust" ? (
         <div className="flex flex-col gap-4">
         <BannerInfoAdjust />
+        <CardCreateProduct />
         {filteredStock.map((item, index) => (
           <ProductCard key={index} {...item}   />
         ))}
