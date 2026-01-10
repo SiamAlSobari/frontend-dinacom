@@ -6,10 +6,11 @@ import { Card } from '@/common/shadcn-ui/card'
 import Link from "next/link"
 import { useQuery } from '@tanstack/react-query'
 import ProductService from '@/services/ProductService'
+import DashboardNotFound from '@/features/dashboard/index/DashboardNotFound'
 
 export default function DashboardRootPage() {
 
-  const {data} = useQuery({
+  const { data: topSelling } = useQuery({
     queryKey: ['top_selling_products_week'],
     queryFn: () => ProductService.getTopSellingProductsByPeriod('week'),
   })
@@ -21,13 +22,7 @@ export default function DashboardRootPage() {
     { id: 4, product: "Almond Milk 1L", stock: "Below average stock level", priority: "low" }
   ]
 
-  const topProducts = [
-    { rank: 1, name: "Avocado (single)", sold: 312 },
-    { rank: 2, name: "Organic Bananas (bunch)", sold: 234 },
-    { rank: 3, name: "Almond Milk 1L", sold: 203 },
-    { rank: 4, name: "Whole Wheat Bread", sold: 188 },
-    { rank: 5, name: "Teh Pucuk", sold: 167 }
-  ]
+
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
@@ -77,23 +72,26 @@ export default function DashboardRootPage() {
         {/* TOP PRODUCT - KECIL */}
         <Card className="lg:col-span-4 bg-white rounded-xl border border-gray-200 p-5">
           <h3 className="font-semibold text-gray-900 mb-4 text-sm">Top 5 Product</h3>
-
-          <div className="space-y-4">
-            {topProducts.map((product) => (
-              <div key={product.rank}>
-                <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <span className="text-blue-600 font-bold text-sm">{product.rank}</span>
+          {topSelling?.data.length === 0 ? (
+            < DashboardNotFound variant='product' />
+          ) : (
+            <div className="space-y-4">
+              {topSelling?.data.map((product) => (
+                <div key={product.rank}>
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <span className="text-blue-600 font-bold text-sm">{product.rank}</span>
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-medium text-gray-900 text-sm">{product.product_name}</p>
+                      <p className="text-xs text-gray-500">{product.total_sold} sold</p>
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <p className="font-medium text-gray-900 text-sm">{product.name}</p>
-                    <p className="text-xs text-gray-500">{product.sold} sold</p>
-                  </div>
+                  {product.rank < 5 && <div className="mt-3 ml-5 border-b border-pink-400"></div>}
                 </div>
-                {product.rank < 5 && <div className="mt-3 ml-5 border-b border-pink-400"></div>}
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </Card>
       </div>
 
