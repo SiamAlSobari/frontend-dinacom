@@ -1,4 +1,4 @@
-import KeputusanBar from '@/features/keputusan/KeputusanBar'
+import KeputusanBar from '@/features/dashboard/keputusan/KeputusanBar'
 import React from 'react'
 
 export default function layout({ children }: { children: React.ReactNode }) {
