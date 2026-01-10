@@ -4,8 +4,15 @@ import React from 'react'
 import { CheckCircle, TriangleAlert } from 'lucide-react'
 import { Card } from '@/common/shadcn-ui/card'
 import Link from "next/link"
+import { useQuery } from '@tanstack/react-query'
+import ProductService from '@/services/ProductService'
 
 export default function DashboardRootPage() {
+
+  const {data} = useQuery({
+    queryKey: ['top_selling_products_week'],
+    queryFn: () => ProductService.getTopSellingProductsByPeriod('week'),
+  })
 
   const stockAlerts = [
     { id: 1, product: "Dark Chocolate Bar 100g", stock: "Only 2 units left. Restock urgently", priority: "critical" },
@@ -108,7 +115,7 @@ export default function DashboardRootPage() {
                     <p className="text-xs">{alert.stock}</p>
                   </div>
                 </div>
-                <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                <button className={`${getPriorityColor(alert.priority)} px-3 py-1 rounded text-sm font-medium`}>
                   View
                 </button>
               </div>

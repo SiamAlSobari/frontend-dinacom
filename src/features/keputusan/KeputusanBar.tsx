@@ -5,13 +5,13 @@ import { useRouter } from "next/navigation"
 import React, { useState } from "react"
 
 export default function RecommendationBar() {
-    const router = useRouter()
+  const router = useRouter()
   const [active, setActive] = useState<"insight" | "rekomendasi">("insight")
   React.useEffect(() => {
     if (active === "insight") {
-        router.push("/dashboard/keputusan")
-    }else{
-        router.push("/dashboard/keputusan/rekomendasi")
+      router.push("/dashboard/keputusan")
+    } else {
+      router.push("/dashboard/keputusan/rekomendasi")
     }
   }, [active])
   return (
@@ -31,22 +31,20 @@ export default function RecommendationBar() {
       <div className="flex items-center gap-3 border border-blue-300 rounded-xl py-3 px-4 bg-blue-50 w-fit">
         <button
           onClick={() => setActive("insight")}
-          className={`px-4 py-1.5 text-sm rounded-lg transition ${
-            active === "insight"
+          className={`px-4 py-1.5 text-sm rounded-lg transition ${active === "insight"
               ? "bg-blue-600 text-white shadow"
               : "text-gray-600 border "
-          }`}
+            }`}
         >
           Insight
         </button>
 
         <button
           onClick={() => setActive("rekomendasi")}
-          className={`px-4 py-1.5 text-sm rounded-lg transition ${
-            active === "rekomendasi"
+          className={`px-4 py-1.5 text-sm rounded-lg transition ${active === "rekomendasi"
               ? "bg-blue-600 text-white shadow"
               : "text-gray-600 border "
-          }`}
+            }`}
         >
           Recommendations
         </button>
