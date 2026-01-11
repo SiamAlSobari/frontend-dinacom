@@ -12,20 +12,21 @@ interface Props {
 const config = {
   stock: {
     icon: BellOff,
-    title: "No Stock Alerts",
-    description: "All products are in safe stock levels."
+    title: "Tidak Ada Peringatan Stok",
+    description: "Semua produk berada pada tingkat stok yang aman."
   },
   product: {
     icon: PackageOpen,
-    title: "No Top Products",
-    description: "No sales data available yet."
+    title: "Belum Ada Produk Terlaris",
+    description: "Belum ada data penjualan yang tersedia."
   },
   activity: {
     icon: Activity,
-    title: "No Recent Activity",
-    description: "There is no activity recorded yet."
+    title: "Belum Ada Aktivitas Terbaru",
+    description: "Belum ada aktivitas yang tercatat."
   }
 }
+
 
 export default function DashboardNotFound({ variant, title, description }: Props) {
   const Icon = config[variant].icon

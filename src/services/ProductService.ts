@@ -1,6 +1,5 @@
 import { ApiResponse } from "@/common/interfaces/response";
 import { apiClient } from "@/common/libs/axios";
-import { ProductSoldStats, RankedProductPeriod, TopSellingProduct } from "@/common/response/product";
 interface CreateProductPayload {
     name: string;
     unit: string;
@@ -26,20 +25,6 @@ class ProductService {
         console.log("Simulating API call with data:", data);
     }
 
-    public async getProductSoldStats() {
-        const response = await apiClient<ApiResponse<ProductSoldStats[]>>({ method: 'get', url: '/products/sold-stats' });
-        return response;
-    }
-
-    public async getTopSellingProducts() {
-        const response = await apiClient<ApiResponse<TopSellingProduct[]>>({ method: 'get', url: '/products/top-selling' });
-        return response;
-    }
-
-    public async getTopSellingProductsByPeriod(period: 'week' | 'month') {
-        const response = await apiClient<ApiResponse<RankedProductPeriod[]>>({ method: 'get', url: `/products/top-selling-by-period?period=${period}` });
-        return response;
-    }
 }
 
 export default new ProductService();

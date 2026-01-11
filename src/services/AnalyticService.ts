@@ -1,6 +1,6 @@
 import { ApiResponse } from "@/common/interfaces/response";
 import { apiClient } from "@/common/libs/axios";
-import { DailyPerWeeklySales, WeeklyPerMonthSales } from "@/common/response/analytic";
+import { DailyPerWeeklySales, TopSellingProduct, WeeklyPerMonthSales } from "@/common/response/analytic";
 
 class AnalyticService {
     public async getDailyPerWeeklySales() {
@@ -10,6 +10,16 @@ class AnalyticService {
 
     public async getWeeklyPerMonthSales() {
         const response  = await apiClient<ApiResponse<WeeklyPerMonthSales[]>>({ method: 'get', url: '/analytics/sales-monthly' });
+        return response;
+    }
+
+    public async getTopSellingProductsThisWeek() {
+        const response  = await apiClient<ApiResponse<TopSellingProduct[]>>({ method: 'get', url: '/analytics/top-products-this-week' });
+        return response;
+    }
+
+    public async getTopSellingProductsThisMonth() {
+        const response  = await apiClient<ApiResponse<TopSellingProduct[]>>({ method: 'get', url: '/analytics/top-products-this-month' });
         return response;
     }
 }
