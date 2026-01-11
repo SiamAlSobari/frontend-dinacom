@@ -12,25 +12,40 @@ import { DailyPerWeekSalesChart } from '@/features/dashboard/index/DailyPerWeekS
 import { WeeklyPerMonthSalesChart } from '@/features/dashboard/index/WeeklyPerMonthSalesChart'
 import ChartCard from '@/features/dashboard/index/ChartCard'
 import AnalyticService from '@/services/AnalyticService'
-import { da } from 'date-fns/locale'
 
 export default function DashboardRootPage() {
   const [chartPeriod, setChartPeriod] = React.useState<'week' | 'month'>('week')
 
-  const { data: topSelling, isLoading } = useQuery({
-    queryKey: ['top_selling_products_week'],
-    queryFn: () => ProductService.getTopSellingProductsByPeriod('week'),
+  const { data: topSellingThisWeek, isLoading: isLoadingTopSellingThisWeek } = useQuery({
+    queryKey: ['top_selling_products_this_week'],
+    queryFn: () => AnalyticService.getTopSellingProductsThisWeek(),
   })
 
-  const {data: dailyPerWeekSales} = useQuery({
+  const { data: topSellingThisMonth, isLoading: isLoadingTopSellingThisMonth } = useQuery({
+    queryKey: ['top_selling_products_this_month'],
+    queryFn: () => AnalyticService.getTopSellingProductsThisMonth(),
+  })
+
+  const { data: dailyPerWeekSales } = useQuery({
     queryKey: ['dainly_week_sales_chart'],
     queryFn: () => AnalyticService.getDailyPerWeeklySales(),
   })
 
-  const {data: weeklyPerMonthSales} = useQuery({
+  const { data: weeklyPerMonthSales } = useQuery({
     queryKey: ['weekly_per_month_sales_chart'],
     queryFn: () => AnalyticService.getWeeklyPerMonthSales(),
   })
+
+  const topSellingData =
+    chartPeriod === 'week'
+      ? topSellingThisWeek?.data
+      : topSellingThisMonth?.data
+
+  const isTopSellingLoading =
+    chartPeriod === 'week'
+      ? isLoadingTopSellingThisMonth || isLoadingTopSellingThisWeek
+      : !topSellingThisMonth
+
 
   const stockAlerts = [
     { id: 1, product: "Dark Chocolate Bar 100g", stock: "Only 2 units left. Restock urgently", priority: "critical" },
@@ -62,57 +77,60 @@ export default function DashboardRootPage() {
         <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-start gap-3 mt-4">
           <CheckCircle className="text-green-600 shrink-0 mt-0.5" size={20} />
           <div>
-            <p className="text-sm font-semibold text-green-800">AI Recommendations Up to Date</p>
-            <p className="text-xs text-green-700">Last run: 2 hours ago</p>
+            <p className="text-sm font-semibold text-green-800">Rekomendasi AI Terbaru</p>
+            <p className="text-xs text-green-700">Terakhir diperbarui 1 jam yang lalu</p>
           </div>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
-        
+
         {/* CHART - LEBAR */}
         <ChartCard dailyPerWeekSales={dailyPerWeekSales?.data ?? []} weeklyPerMonthSales={weeklyPerMonthSales?.data ?? []} chartPeriod={chartPeriod} setChartPeriod={setChartPeriod} />
 
         {/* TOP PRODUCT - KECIL */}
         <Card className="lg:col-span-4 bg-white rounded-xl border border-gray-200 p-5">
-          <h3 className="font-semibold text-gray-900 mb-4 text-sm">Top 5 Product</h3>
-          {isLoading ? (
+          <h3 className="font-semibold text-gray-900 mb-4 text-sm">
+            Top 5 Terlaris ({chartPeriod === 'week' ? 'Minggu Ini' : 'Bulan Ini'})
+          </h3>
+
+          {isTopSellingLoading ? (
             <p className="text-sm text-gray-400">Loading...</p>
-          ) : !topSelling?.data || topSelling.data.length === 0 ? (
+          ) : !topSellingData || topSellingData.length === 0 ? (
             <DashboardNotFound variant="product" />
           ) : (
             <div className="space-y-4">
-              {topSelling.data.map((product) => (
-                <div key={product.rank}>
+              {topSellingData.map((product, i) => (
+                <div key={product.product_id}>
                   <div className="flex items-start gap-3">
                     <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <span className="text-blue-600 font-bold text-sm">{product.rank}</span>
+                      <span className="text-blue-600 font-bold text-sm">{i + 1}</span>
                     </div>
                     <div className="flex-1">
                       <p className="font-medium text-gray-900 text-sm">
                         {product.product_name}
                       </p>
                       <p className="text-xs text-gray-500">
-                        {product.total_sold} sold
+                        {product.total_sold} terjual
                       </p>
                     </div>
                   </div>
-                  {product.rank < 5 && (
+
+                  {i < 4 && (
                     <div className="mt-3 ml-5 border-b border-pink-400"></div>
                   )}
                 </div>
               ))}
             </div>
           )}
-
         </Card>
+
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-
         {/* STOCK ALERT - LEBAR */}
         <div className="lg:col-span-8">
-          <h2 className="text-base font-semibold text-gray-900 mb-4">Stock Alerts</h2>
+          <h2 className="text-base font-semibold text-gray-900 mb-4">Peringatan Stok</h2>
           <div className="space-y-3">
             {stockAlerts.map((alert) => (
               <div
@@ -136,7 +154,7 @@ export default function DashboardRootPage() {
 
         {/* RECENT ACTIVITY - KECIL */}
         <Card className="lg:col-span-4 bg-white rounded-xl border border-gray-200 p-4">
-          <h3 className="font-semibold text-gray-900 mb-3 text-sm">Recent Activity</h3>
+          <h3 className="font-semibold text-gray-900 mb-3 text-sm">Aktivitas Terbaru</h3>
           <div className="space-y-3">
             {[1, 2, 3, 4, 5].map((i) => (
               <div key={i} className="flex items-center gap-3">
