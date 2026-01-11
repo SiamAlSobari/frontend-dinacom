@@ -10,7 +10,7 @@ import React from "react"
 
 export default function BulkTransactionPage() {
     const [rows, setRows] = React.useState<BulkRow[]>([
-        { date: undefined, product: "", quantity: "", type: "" },
+        { date: undefined, product: { id: "", name: "", price: 0 }, quantity: "", type: "",method: "" },
     ])
 
     const [openProductIndex, setOpenProductIndex] = React.useState<number | null>(null)
@@ -19,7 +19,7 @@ export default function BulkTransactionPage() {
     const handleAddRow = () => {
         setRows((prev) => [
             ...prev,
-            { date: undefined, product: "", quantity: "", type: "" },
+            { date: undefined, product: { id: "", name: "", price: 0 }, quantity: "", type: "",method: "" },
         ])
     }
 
@@ -36,7 +36,7 @@ export default function BulkTransactionPage() {
 
     const handleCancel = () => {
         if (!confirm("Yakin mau membatalkan dan menghapus semua input?")) return
-        setRows([{ date: undefined, product: "", quantity: "", type: "" }])
+        setRows([{ date: undefined, product: { id: "", name: "", price: 0 }, quantity: "", type: "",method: "" }])
     }
 
     return (
