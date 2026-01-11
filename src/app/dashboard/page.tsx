@@ -7,10 +7,13 @@ import Link from "next/link"
 import { useQuery } from '@tanstack/react-query'
 import ProductService from '@/services/ProductService'
 import DashboardNotFound from '@/features/dashboard/index/DashboardNotFound'
-import { WeeklySalesChart } from '@/features/dashboard/index/WeeklySalesChart'
 import { Button } from '@/common/shadcn-ui/button'
+import { DailyPerWeekSalesChart } from '@/features/dashboard/index/DailyPerWeekSalesChart'
+import { WeeklyPerMonthSalesChart } from '@/features/dashboard/index/WeeklyPerMonthSalesChart'
+import ChartCard from '@/features/dashboard/index/ChartCard'
 
 export default function DashboardRootPage() {
+  const [chartPeriod, setChartPeriod] = React.useState<'week' | 'month'>('week')
 
   const { data: topSelling, isLoading } = useQuery({
     queryKey: ['top_selling_products_week'],
@@ -45,7 +48,7 @@ export default function DashboardRootPage() {
       {/* Header */}
       <div className="mb-8">
         <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-start gap-3 mt-4">
-          <CheckCircle className="text-green-600 flex-shrink-0 mt-0.5" size={20} />
+          <CheckCircle className="text-green-600 shrink-0 mt-0.5" size={20} />
           <div>
             <p className="text-sm font-semibold text-green-800">AI Recommendations Up to Date</p>
             <p className="text-xs text-green-700">Last run: 2 hours ago</p>
@@ -54,23 +57,9 @@ export default function DashboardRootPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
-
+        
         {/* CHART - LEBAR */}
-        <Card className="lg:col-span-8 bg-white rounded-xl border border-gray-200 p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-gray-900">Sales Overview</h3>
-            <div className="flex gap-2">
-              <Button variant="outline">Week</Button>
-              <Button variant="outline">Month</Button>
-            </div>
-          </div>
-
-          {/* TINGGI CHART */}
-          <div className="h-[320px]">
-            <WeeklySalesChart />
-          </div>
-        </Card>
-
+        <ChartCard chartPeriod={chartPeriod} setChartPeriod={setChartPeriod} />
 
         {/* TOP PRODUCT - KECIL */}
         <Card className="lg:col-span-4 bg-white rounded-xl border border-gray-200 p-5">

@@ -28,7 +28,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export function WeeklySalesChart() {
+export function DailyPerWeekSalesChart() {
   return (
     <ChartContainer config={chartConfig} className="h-full w-full">
       <LineChart
