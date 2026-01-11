@@ -1,6 +1,11 @@
 export type BulkRow = {
   date?: Date
-  product: string
+  product: {
+    id: string
+    name: string
+    price: number
+  }
   quantity: string
-  type: string
+  type: string,
+  method: string
 }
