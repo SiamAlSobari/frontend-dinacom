@@ -11,6 +11,8 @@ import { Button } from '@/common/shadcn-ui/button'
 import { DailyPerWeekSalesChart } from '@/features/dashboard/index/DailyPerWeekSalesChart'
 import { WeeklyPerMonthSalesChart } from '@/features/dashboard/index/WeeklyPerMonthSalesChart'
 import ChartCard from '@/features/dashboard/index/ChartCard'
+import AnalyticService from '@/services/AnalyticService'
+import { da } from 'date-fns/locale'
 
 export default function DashboardRootPage() {
   const [chartPeriod, setChartPeriod] = React.useState<'week' | 'month'>('week')
@@ -18,6 +20,16 @@ export default function DashboardRootPage() {
   const { data: topSelling, isLoading } = useQuery({
     queryKey: ['top_selling_products_week'],
     queryFn: () => ProductService.getTopSellingProductsByPeriod('week'),
+  })
+
+  const {data: dailyPerWeekSales} = useQuery({
+    queryKey: ['dainly_week_sales_chart'],
+    queryFn: () => AnalyticService.getDailyPerWeeklySales(),
+  })
+
+  const {data: weeklyPerMonthSales} = useQuery({
+    queryKey: ['weekly_per_month_sales_chart'],
+    queryFn: () => AnalyticService.getWeeklyPerMonthSales(),
   })
 
   const stockAlerts = [
@@ -59,7 +71,7 @@ export default function DashboardRootPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
         
         {/* CHART - LEBAR */}
-        <ChartCard chartPeriod={chartPeriod} setChartPeriod={setChartPeriod} />
+        <ChartCard dailyPerWeekSales={dailyPerWeekSales?.data ?? []} weeklyPerMonthSales={weeklyPerMonthSales?.data ?? []} chartPeriod={chartPeriod} setChartPeriod={setChartPeriod} />
 
         {/* TOP PRODUCT - KECIL */}
         <Card className="lg:col-span-4 bg-white rounded-xl border border-gray-200 p-5">

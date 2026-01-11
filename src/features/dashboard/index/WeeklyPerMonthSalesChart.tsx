@@ -8,16 +8,11 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/common/shadcn-ui/chart"
+import { WeeklyPerMonthSales } from "@/common/response/analytic"
 
 export const description = "Weekly sales chart"
 
-const chartData = [
-  { week: 1, label: "Week 1", total_sold: 120 },
-  { week: 2, label: "Week 2", total_sold: 98 },
-  { week: 3, label: "Week 3", total_sold: 143 },
-  { week: 4, label: "Week 4", total_sold: 60 },
-  { week: 5, label: "Week 5", total_sold: 0 },
-]
+
 
 const chartConfig = {
   total_sold: {
@@ -26,12 +21,15 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export function WeeklyPerMonthSalesChart() {
+interface Props{
+    data: WeeklyPerMonthSales[]
+}
+export function WeeklyPerMonthSalesChart({data}:Props) {
   return (
     <ChartContainer config={chartConfig} className="h-full w-full">
       <LineChart
         accessibilityLayer
-        data={chartData}
+        data={data}
         margin={{ top: 10, left: 12, right: 12, bottom: 10 }}
       >
         <CartesianGrid vertical={false} />
