@@ -7,10 +7,12 @@ import Link from "next/link"
 import { useQuery } from '@tanstack/react-query'
 import ProductService from '@/services/ProductService'
 import DashboardNotFound from '@/features/dashboard/index/DashboardNotFound'
+import { WeeklySalesChart } from '@/features/dashboard/index/WeeklySalesChart'
+import { Button } from '@/common/shadcn-ui/button'
 
 export default function DashboardRootPage() {
 
-  const { data: topSelling } = useQuery({
+  const { data: topSelling, isLoading } = useQuery({
     queryKey: ['top_selling_products_week'],
     queryFn: () => ProductService.getTopSellingProductsByPeriod('week'),
   })
@@ -51,7 +53,6 @@ export default function DashboardRootPage() {
         </div>
       </div>
 
-      {/* ===== TOP GRID ===== */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
 
         {/* CHART - LEBAR */}
@@ -59,39 +60,50 @@ export default function DashboardRootPage() {
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-semibold text-gray-900">Sales Overview</h3>
             <div className="flex gap-2">
-              <button className="px-3 py-1 bg-gray-200 rounded text-xs">Week</button>
-              <button className="px-3 py-1 bg-gray-200 rounded text-xs">Month</button>
+              <Button variant="outline">Week</Button>
+              <Button variant="outline">Month</Button>
             </div>
           </div>
 
-          <div className="bg-gray-100 rounded-lg h-72 flex items-center justify-center">
-            <span className="text-gray-400 text-sm">Chart Placeholder</span>
+          {/* TINGGI CHART */}
+          <div className="h-[320px]">
+            <WeeklySalesChart />
           </div>
         </Card>
+
 
         {/* TOP PRODUCT - KECIL */}
         <Card className="lg:col-span-4 bg-white rounded-xl border border-gray-200 p-5">
           <h3 className="font-semibold text-gray-900 mb-4 text-sm">Top 5 Product</h3>
-          {topSelling?.data.length === 0 ? (
-            < DashboardNotFound variant='product' />
+          {isLoading ? (
+            <p className="text-sm text-gray-400">Loading...</p>
+          ) : !topSelling?.data || topSelling.data.length === 0 ? (
+            <DashboardNotFound variant="product" />
           ) : (
             <div className="space-y-4">
-              {topSelling?.data.map((product) => (
+              {topSelling.data.map((product) => (
                 <div key={product.rank}>
                   <div className="flex items-start gap-3">
                     <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                       <span className="text-blue-600 font-bold text-sm">{product.rank}</span>
                     </div>
                     <div className="flex-1">
-                      <p className="font-medium text-gray-900 text-sm">{product.product_name}</p>
-                      <p className="text-xs text-gray-500">{product.total_sold} sold</p>
+                      <p className="font-medium text-gray-900 text-sm">
+                        {product.product_name}
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        {product.total_sold} sold
+                      </p>
                     </div>
                   </div>
-                  {product.rank < 5 && <div className="mt-3 ml-5 border-b border-pink-400"></div>}
+                  {product.rank < 5 && (
+                    <div className="mt-3 ml-5 border-b border-pink-400"></div>
+                  )}
                 </div>
               ))}
             </div>
           )}
+
         </Card>
       </div>
 
