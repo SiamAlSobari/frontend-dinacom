@@ -1,5 +1,6 @@
 import { ApiResponse } from "@/common/interfaces/response";
 import { apiClient } from "@/common/libs/axios";
+import { Product } from "@/common/response/product";
 interface CreateProductPayload {
     name: string;
     unit: string;
@@ -23,6 +24,11 @@ class ProductService {
             await apiClient({ method: 'post', url: '/products', data: formData });
         }
         console.log("Simulating API call with data:", data);
+    }
+
+    public async getProduct(){
+        const response = await apiClient<ApiResponse<Product[]>>({ method: 'get', url: '/products' });
+        return response.data
     }
 
 }

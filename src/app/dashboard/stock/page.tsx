@@ -13,10 +13,10 @@ export default function ViewStockPage() {
   const [search, setSearch] = React.useState("")
   const [tab, setTab] = React.useState<"view" | "adjust">("view")
 
-  const {data} = useQuery({
-    queryKey: ["product-sold-stats"],
-    queryFn: () => ProductService.getProductSoldStats(),
-  })
+  // const {data} = useQuery({
+  //   queryKey: ["product-sold-stats"],
+  //   queryFn: () => ProductService.getProductSoldStats(),
+  // })
 
   const stockItems = [
     { name: "Product A", stock_in: 5, stock_out: 3, status: "Critical", day_left: 10, caregory: "Category 1", image: "saas.png" },

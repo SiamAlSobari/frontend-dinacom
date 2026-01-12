@@ -12,6 +12,9 @@ import { DailyPerWeekSalesChart } from '@/features/dashboard/index/DailyPerWeekS
 import { WeeklyPerMonthSalesChart } from '@/features/dashboard/index/WeeklyPerMonthSalesChart'
 import ChartCard from '@/features/dashboard/index/ChartCard'
 import AnalyticService from '@/services/AnalyticService'
+import ActivityService from '@/services/ActivityService'
+import RecentActivityNotFound from '@/features/dashboard/index/RecentActivityNotFound'
+import { timeAgo } from '@/common/libs/date'
 
 export default function DashboardRootPage() {
   const [chartPeriod, setChartPeriod] = React.useState<'week' | 'month'>('week')
@@ -34,6 +37,11 @@ export default function DashboardRootPage() {
   const { data: weeklyPerMonthSales } = useQuery({
     queryKey: ['weekly_per_month_sales_chart'],
     queryFn: () => AnalyticService.getWeeklyPerMonthSales(),
+  })
+
+  const { data: recentActivities } = useQuery({
+    queryKey: ['recent_activities'],
+    queryFn: () => ActivityService.getActivities(),
   })
 
   const topSellingData =
@@ -68,6 +76,29 @@ export default function DashboardRootPage() {
         return 'bg-gray-50 border-gray-200 text-gray-700'
     }
   }
+
+  const getActivityColor = (activity_type: string) => {
+    switch (activity_type) {
+      case "TRANSACTION_SALE":
+        return "bg-red-500"
+
+      case "TRANSACTION_PURCHASE":
+        return "bg-green-500"
+
+      case "STOCK_ADJUSTMENT":
+        return "bg-yellow-500"
+
+      case "CREATE_PRODUCT":
+        return "bg-blue-500"
+
+      case "UPDATE_PRODUCT":
+        return "bg-purple-500"
+
+      default:
+        return "bg-gray-400"
+    }
+  }
+
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 min-h-screen bg-gray-50">
@@ -156,15 +187,35 @@ export default function DashboardRootPage() {
         <Card className="lg:col-span-4 bg-white rounded-xl border border-gray-200 p-4">
           <h3 className="font-semibold text-gray-900 mb-3 text-sm">Aktivitas Terbaru</h3>
           <div className="space-y-3">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="flex items-center gap-3">
-                <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
-                <div className="flex-1">
-                  <div className="h-3 bg-gray-300 rounded w-full mb-1"></div>
-                  <div className="h-2 bg-gray-200 rounded w-3/4"></div>
-                </div>
+            {recentActivities && recentActivities.length === 0 ? (
+              <RecentActivityNotFound />
+            ) : (
+              <div className="space-y-4">
+                {recentActivities?.map((activity) => (
+                  <div key={activity.id} className="flex items-start gap-3">
+
+                    <div
+                      className={`w-2.5 h-2.5 rounded-full mt-2 shrink-0 
+        ${getActivityColor(activity.activity_type)}`}
+                    />
+
+                    <div className="flex-1">
+                      <p className="text-sm text-gray-800 leading-snug">
+                        {activity.activity_text}
+                      </p>
+
+                      <p className="text-xs text-gray-500 mt-0.5">
+                        {timeAgo(activity.created_at)}
+                      </p>
+                    </div>
+
+                  </div>
+                ))}
               </div>
-            ))}
+
+            )}
+
+
           </div>
         </Card>
       </div>
