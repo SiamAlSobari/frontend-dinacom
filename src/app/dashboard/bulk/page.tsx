@@ -5,21 +5,32 @@ import { BulkRow } from "@/common/types/bulk"
 import { BulkInfoBanner } from "@/features/dashboard/bulk/BulkInfoBanner"
 import { BulkTransactionRow } from "@/features/dashboard/bulk/BulkStransactionRow"
 import { BulkTableHeader } from "@/features/dashboard/bulk/BulkTableHeader"
+import TransactionService, { BulkTransactionPayload } from "@/services/TransactionService"
+import { useMutation } from "@tanstack/react-query"
 import { ArrowLeft } from "lucide-react"
 import React from "react"
 
 export default function BulkTransactionPage() {
     const [rows, setRows] = React.useState<BulkRow[]>([
-        { date: undefined, product: { id: "", name: "", price: 0 }, quantity: "", type: "",method: "" },
+        { date: undefined, product: { id: "", name: "", price: 0 }, quantity: "", type: "SALE", method: "" },
     ])
 
     const [openProductIndex, setOpenProductIndex] = React.useState<number | null>(null)
     const [openTypeIndex, setOpenTypeIndex] = React.useState<number | null>(null)
+    const [openMethodIndex, setOpenMethodIndex] = React.useState<number | null>(null)
+
+    const { mutate: bulkTransaction, isPending: isBulkTransactionPending } = useMutation({
+        mutationKey: ["bulk-transaction"],
+        mutationFn: TransactionService.bulkTransaction,
+        onSuccess: () => {
+            alert("Bulk transaction successful!")
+        }
+    })
 
     const handleAddRow = () => {
         setRows((prev) => [
             ...prev,
-            { date: undefined, product: { id: "", name: "", price: 0 }, quantity: "", type: "",method: "" },
+            { date: undefined, product: { id: "", name: "", price: 0 }, quantity: "", type: "SALE", method: "" },
         ])
     }
 
@@ -30,13 +41,24 @@ export default function BulkTransactionPage() {
     }
 
     const handleSubmit = () => {
-        console.log("BULK DATA:", rows)
-        alert("Submit berhasil. Cek console 🔥")
+        const payload: BulkTransactionPayload = {
+            items: rows.map(row => ({
+                product_id: row.product?.id as string,
+                quantity: Number(row.quantity),
+                unit_price: row.product?.price as number,
+                trx_type: row.type as string,
+                trx_date: new Date(row.date as Date).toISOString(),
+                trx_method: row.method as string,
+            }))
+        }
+
+        bulkTransaction(payload) 
     }
+
 
     const handleCancel = () => {
         if (!confirm("Yakin mau membatalkan dan menghapus semua input?")) return
-        setRows([{ date: undefined, product: { id: "", name: "", price: 0 }, quantity: "", type: "",method: "" }])
+        setRows([{ date: undefined, product: { id: "", name: "", price: 0 }, quantity: "", type: "SALE", method: "" }])
     }
 
     return (
@@ -80,6 +102,8 @@ export default function BulkTransactionPage() {
                             setOpenProductIndex={setOpenProductIndex}
                             openTypeIndex={openTypeIndex}
                             setOpenTypeIndex={setOpenTypeIndex}
+                            openMethodIndex={openMethodIndex}
+                            setOpenMethodIndex={setOpenMethodIndex}
                         />
                     ))}
                 </div>
@@ -95,6 +119,7 @@ export default function BulkTransactionPage() {
                     <div className="flex flex-col md:flex-row gap-4">
                         <button
                             onClick={handleSubmit}
+                            disabled={isBulkTransactionPending}
                             className="flex-1 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
                         >
                             Submit
