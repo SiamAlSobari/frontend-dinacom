@@ -1,8 +1,7 @@
-## Team (SMK Telkom Purwokerto)
-
-- Shidiq  
+## Team (Shidiq - SMK Telkom Purwokerto)
+ 
 - Siam Al Sobari  
-- Naufal Qathafa / Rasya Hidayat  
+- Naufal Qathafa Rasya Hidayat  
 - Muhammad Shidiq Wicaksono  
 - Jingga Sujud Pribadi  
 
