@@ -1,6 +1,8 @@
 "use client"
 import React from 'react';
 import { ArrowLeft, TrendingUp, Package, BarChart3, Activity } from 'lucide-react';
+import { StableDemandChart } from '@/features/dashboard/insight/StableDemandChart';
+import { RevenueChart } from '@/features/dashboard/insight/RevenueChart';
 
 export default function InsightsPage() {
   const priorityProducts = [
@@ -57,7 +59,7 @@ export default function InsightsPage() {
   ];
 
   return (
-    <div className='mt-9'>
+    <div className='mt-9 p-4 sm:p-6  lg:p-10 min-h-screen bg-gray-50'>
       {/* Header */}
 
       {/* Stats Cards */}
@@ -107,7 +109,7 @@ export default function InsightsPage() {
       <div className="bg-white rounded-xl p-6 mb-6 border border-gray-100">
         <h2 className="text-lg font-semibold text-gray-900 mb-2">Priorities This Week</h2>
         <p className="text-sm text-gray-500 mb-4">Focus on these products to optimize your stock levels</p>
-        
+
         <div className="space-y-3">
           {priorityProducts.map((product) => (
             <div key={product.id} className={`flex items-center justify-between p-4 rounded-lg ${product.bgColor} ${product.borderColor}`}>
@@ -134,8 +136,9 @@ export default function InsightsPage() {
         <div className="bg-white rounded-xl p-6 border border-gray-100">
           <h2 className="text-lg font-semibold text-gray-900 mb-2">Demand Stability Trend</h2>
           <p className="text-sm text-gray-500 mb-4">Track how many products have stable vs volatile demand over time</p>
-          <div className="bg-gray-100 rounded-lg h-64 flex items-center justify-center">
-            <p className="text-gray-400">Chart Placeholder</p>
+          <div className="h-100">
+
+            <StableDemandChart />
           </div>
         </div>
 
@@ -143,8 +146,8 @@ export default function InsightsPage() {
         <div className="bg-white rounded-xl p-6 border border-gray-100">
           <h2 className="text-lg font-semibold text-gray-900 mb-2">Revenue Trend (30 Days)</h2>
           <p className="text-sm text-gray-500 mb-4">Daily revenue performance over the last month</p>
-          <div className="bg-gray-100 rounded-lg h-64 flex items-center justify-center">
-            <p className="text-gray-400">Chart Placeholder</p>
+          <div className="h-100">
+            <RevenueChart />
           </div>
         </div>
       </div>
@@ -158,7 +161,7 @@ export default function InsightsPage() {
             <h2 className="text-lg font-semibold text-gray-900">Stable Demand Products</h2>
           </div>
           <p className="text-sm text-gray-500 mb-4">Products with consistent, predictable sales patterns</p>
-          
+
           <div className="space-y-2">
             {stableDemandProducts.map((product, index) => (
               <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-blue-50 border border-blue-100">
@@ -179,7 +182,7 @@ export default function InsightsPage() {
             <h2 className="text-lg font-semibold text-gray-900">Stable Demand Products</h2>
           </div>
           <p className="text-sm text-gray-500 mb-4">Products with consistent, predictable sales patterns</p>
-          
+
           <div className="space-y-2">
             {stableDemandProductsRed.map((product, index) => (
               <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-red-50 border border-red-100">
