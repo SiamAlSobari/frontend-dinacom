@@ -75,7 +75,7 @@ export default function RecommendationPage() {
 
 
   return (
-    <div className='mt-9'>
+    <div className='mt-9 p-4 sm:p-6  lg:p-10 min-h-screen bg-gray-50'>
 
       {/* Info Banner */}
       <div className="bg-linear-to-r from-purple-600 to-purple-700 rounded-xl p-6 mb-6 text-white">
