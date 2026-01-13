@@ -5,19 +5,19 @@ import { z } from 'zod'
 import FieldInfo from '@/common/components/FieldInfo'
 import { useMutation } from '@tanstack/react-query'
 import AuthService from '@/services/AuthService'
+import toast from 'react-hot-toast'
+import { useRouter } from 'next/navigation'
 
 export default function SignInForm() {
+  const router = useRouter()
   const validation = z.object({
     email: z.string().min(1, 'Email is required').email('Invalid email address'),
     password: z.string().min(6, 'Harus minimal 6 karakter'),
   })
 
-  const { mutate: signIn, isPending } = useMutation({
+  const { mutateAsync: signIn, isPending } = useMutation({
     mutationFn: AuthService.signIn,
     mutationKey: ['auth_signin'],
-    onSuccess: (data) => {
-      console.log('Sign in successful:', data)
-    },
   })
 
   const form = useForm({
@@ -28,15 +28,22 @@ export default function SignInForm() {
     validators: {
       onChange: validation,
     },
-    onSubmit: ({value}) => {
-      signIn(value) 
+    onSubmit: async ({ value }) => {
+      toast.promise(
+        signIn(value), // ⬅️ PROMISE ASLI
+        {
+          loading: 'Loading...',
+          success: () => {
+            router.push('/dashboard')
+            return 'Berhasil masuk! Mengalihkan...'
+          },
+          error: 'Gagal masuk',
+        }
+      )
     },
   })
 
   const [showPassword, setShowPassword] = React.useState(false)
-  const togglePasswordVisibility = () => {
-    setShowPassword((prev) => !prev)
-  }
 
   return (
     <form
@@ -45,7 +52,7 @@ export default function SignInForm() {
         e.stopPropagation()
         form.handleSubmit()
       }}
-      className="space-y-6" // naikkan spacing antar field agar lebih lega
+      className="space-y-6"
     >
       {/* Email */}
       <form.Field name="email">
@@ -93,20 +100,18 @@ export default function SignInForm() {
               />
               <button
                 type="button"
-                onClick={togglePasswordVisibility}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-700 focus:outline-none"
-                aria-label={showPassword ? 'Sembunyikan password' : 'Tampilkan password'}
+                onClick={() => setShowPassword((p) => !p)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-700"
               >
                 {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
               </button>
             </div>
 
-            {/* Bagian bawah: error + forgot password */}
             <div className="mt-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
               <FieldInfo field={field} />
               <a
                 href="#"
-                className="text-sm text-blue-600 hover:text-blue-800 hover:underline text-right sm:text-left"
+                className="text-sm text-blue-600 hover:text-blue-800 hover:underline"
               >
                 Lupa password?
               </a>
@@ -120,8 +125,8 @@ export default function SignInForm() {
         disabled={isPending}
         className="w-full py-3.5 text-base font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition"
       >
-        Sign In
+        {isPending ? 'Loading...' : 'Sign In'}
       </button>
     </form>
   )
-}   
+}

@@ -118,7 +118,7 @@ const menuVariants = {
               initial="closed"
               animate="open"
               exit="closed"
-              className="fixed inset-x-0 top-[72px] z-50 bg-white shadow-lg rounded-b-2xl md:hidden overflow-hidden"
+              className="fixed inset-x-0 top-18 z-50 bg-white shadow-lg rounded-b-2xl md:hidden overflow-hidden"
             >
               <div className="px-6 py-8 space-y-6">
                 {/* Nav Items */}
