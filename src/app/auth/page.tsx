@@ -70,7 +70,7 @@ export default function AuthPage() {
             </div>
 
             {/* Form */}
-            {tab === 'signin' ? <SignInForm /> : <SignUpForm />}
+            {tab === 'signin' ? <SignInForm /> : <SignUpForm tabs={tab} setTabs={setTab} />}
           </Card>
         </div>
       </div>

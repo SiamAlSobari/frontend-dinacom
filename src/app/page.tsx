@@ -12,11 +12,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-50">
       <LandingPageHeader />
-
-      {/* ================= HERO ================= */}
       <HeroSection  />
-
-      {/* ================= HOW IT WORKS ================= */}
       <StepManagement />
     </div>
   );

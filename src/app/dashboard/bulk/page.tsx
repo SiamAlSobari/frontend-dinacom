@@ -7,7 +7,6 @@ import { BulkTransactionRow } from "@/features/dashboard/bulk/BulkStransactionRo
 import { BulkTableHeader } from "@/features/dashboard/bulk/BulkTableHeader"
 import TransactionService, { BulkTransactionPayload } from "@/services/TransactionService"
 import { useMutation } from "@tanstack/react-query"
-import { ArrowLeft } from "lucide-react"
 import React from "react"
 
 export default function BulkTransactionPage() {
@@ -63,20 +62,6 @@ export default function BulkTransactionPage() {
 
     return (
         <div className="p-6 md:p-10 min-h-screen">
-            <div className="flex items-center gap-4 mb-8">
-                <button>
-                    <ArrowLeft className="text-gray-600" size={24} />
-                </button>
-                <div className="flex flex-col">
-                    <div className="text-black text-xl font-normal font-['Poppins'] leading-6">
-                        Record Daily Activity
-                    </div>
-                    <div className="text-neutral-600 text-sm font-normal font-['Poppins'] leading-6">
-                        Bulk input of sales and purchases
-                    </div>
-                </div>
-            </div>
-
             <BulkInfoBanner />
 
             <Card className="mt-8 w-full">

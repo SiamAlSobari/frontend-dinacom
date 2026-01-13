@@ -5,8 +5,14 @@ import { useMutation } from '@tanstack/react-query'
 import { Lock, Mail, User } from 'lucide-react'
 import React from 'react'
 import z from 'zod'
+import toast from 'react-hot-toast'
 
-export default function SignUpForm() {
+interface Props {
+  tabs: 'signin' | 'signup'
+  setTabs: (tab: 'signin' | 'signup') => void
+}
+
+export default function SignUpForm({ tabs, setTabs }: Props) {
 
   const validate = z.object({
     name: z.string().min(1, 'Name is required'),
@@ -14,12 +20,9 @@ export default function SignUpForm() {
     password: z.string().min(6, 'Password must be at least 6 characters long'),
   })
 
-  const { mutate: signUp, isPending } = useMutation({
+  const { mutateAsync: signUp, isPending } = useMutation({
     mutationFn: AuthService.signUp,
     mutationKey: ['auth_signup'],
-    onSuccess: (data) => {
-      console.log('Sign up successful:', data)
-    },
   })
 
   const form = useForm({
@@ -31,21 +34,35 @@ export default function SignUpForm() {
     validators: {
       onChange: validate,
     },
-    onSubmit: ({ value }) => {
-      signUp({
-        name: value.name,
-        email: value.email,
-        password: value.password,
-      })
+    onSubmit: async ({ value }) => {
+      toast.promise(
+        signUp({
+          name: value.name,
+          email: value.email,
+          password: value.password,
+        }),
+        {
+          loading: 'Membuat akun...',
+          success: () => {
+            setTabs('signin')
+            return 'Registrasi berhasil! Silakan login.'
+          },
+          error: (err: any) =>
+            err?.response?.data?.message || 'Registrasi gagal',
+        }
+      )
     },
   })
-  return (
-    <form onSubmit={(e) => {
-      e.preventDefault()
-      e.stopPropagation()
-      form.handleSubmit()
-    }} className="space-y-4">
 
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault()
+        e.stopPropagation()
+        form.handleSubmit()
+      }}
+      className="space-y-4"
+    >
       {/* Nama */}
       <form.Field name="name">
         {(field) => (
@@ -124,9 +141,9 @@ export default function SignUpForm() {
       <button
         type="submit"
         disabled={isPending}
-        className="w-full py-3 bg-blue-600 text-white text-base rounded-lg hover:bg-blue-700"
+        className="w-full py-3 bg-blue-600 text-white text-base rounded-lg hover:bg-blue-700 disabled:opacity-60"
       >
-        Sign In
+        {isPending ? 'Loading...' : 'Sign Up'}
       </button>
     </form>
   )
