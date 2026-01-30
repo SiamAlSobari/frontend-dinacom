@@ -15,3 +15,14 @@ export interface TopSellingProduct  {
   product_name: string    
   total_sold: number      
 }
+
+export interface WeeklyStabilityData {
+  week: string;      // contoh: "Week 1"
+  stable: number;    // jumlah stable
+  unstable: number;  // jumlah unstable
+}
+
+export interface RevenueTrend {
+  week: string
+  revenue: number
+}

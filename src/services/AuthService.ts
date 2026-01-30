@@ -1,4 +1,5 @@
 import { apiClient } from '@/common/libs/axios';
+import { setUser } from '@/common/stores/user';
 
 interface SignInPayload {
     email: string;
@@ -26,9 +27,16 @@ class AuthService {
     }
 
     public async session() {
-        const response = await apiClient({ method: 'get', url: '/auth/session' });
-        return response;
+        const response = await apiClient<{ data: { user: { id: string } } }>({ method: 'get', url: '/auth/session' });
+        setUser(response.data.user.id);
+        return response.data.user;
 
+    }
+
+    public async signOut() {
+        const response = await apiClient({ method: 'delete', url: '/auth/logout' });
+        setUser(null);
+        return response;
     }
 }
 

@@ -6,12 +6,13 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import CardSubscribetionInfo from './CardSubscribetionInfo'
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuList, NavigationMenuTrigger } from '../shadcn-ui/navigation-menu'
+import { useSubscription } from '../stores/subscription'
+import Image from 'next/image'
 
 export function DashboardHeader() {
   const pathname = usePathname()
-  const [locked, setLocked] = React.useState(false)
   const [showSubscriptionModal, setShowSubscriptionModal] = React.useState(false)
-
+  const subscription = useSubscription()
   const isActive = (path: string) => {
     if (path === "/dashboard") {
       return pathname === "/dashboard"
@@ -26,7 +27,7 @@ export function DashboardHeader() {
       : "text-sm text-gray-600 hover:text-gray-900"
 
   const handleLockedClick = () => {
-    if (!locked) {
+    if (!subscription) {
       setShowSubscriptionModal(true)
     }
   }
@@ -60,9 +61,7 @@ export function DashboardHeader() {
           {/* Logo */}
           <div className="flex items-center gap-3">
             <div className="bg-blue-600 p-2 rounded-lg">
-              <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M4 4a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2H4zm0 2h12v8H4V6z" />
-              </svg>
+              <Image src="/icons/inventa_icon_white.png" alt="Inventa Logo" width={24} height={24} />
             </div>
             <div>
               <h1 className="text-lg font-semibold text-gray-900">Inventa</h1>
@@ -109,7 +108,7 @@ export function DashboardHeader() {
           <div className="flex items-center gap-4">
 
             {
-              locked ? (
+              subscription ? (
                 <div className="flex items-center gap-2 px-3 py-1.5 bg-green-50 border border-green-200 rounded-md">
                   <Zap className="w-5 h-5 text-green-400" />
                   <div className="w-2 h-2 bg-green-500 rounded-full"></div>

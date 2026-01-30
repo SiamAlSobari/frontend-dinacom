@@ -7,25 +7,26 @@ import {
     ChartTooltipContent,
     type ChartConfig,
 } from "@/common/shadcn-ui/chart"
+import { WeeklyStabilityData } from "@/common/response/analytic"
 
 export const description = "Stable Demand Chart"
 
-const chartData = [
-    { week: "Week 1", stable: 120, unstable: 40 },
-    { week: "Week 2", stable: 150, unstable: 60 },
-    { week: "Week 3", stable: 130, unstable: 70 },
-]
+
 
 const chartConfig = {
     stable: { label: "Stable Demand", color: "#4ade80" },   // hijau muda
     unstable: { label: "Unstable Demand", color: "#f59e0b" }, // kuning/orange
 }
 
-export function StableDemandChart() {
+interface Props {
+    data: WeeklyStabilityData[]
+}
+
+export function StableDemandChart({ data }: Props) {
     return (
         <ChartContainer className="h-full w-full" config={chartConfig}>
             <BarChart
-                data={chartData}
+                data={data}
                 margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
                 barGap={10}
             >

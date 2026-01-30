@@ -1,22 +1,43 @@
+"use client";
 import React from 'react';
 import { ArrowLeft, ChevronRight, LogOut } from 'lucide-react';
+import { useMutation } from '@tanstack/react-query';
+import AuthService from '@/services/AuthService';
+import { useRouter } from 'next/navigation';
+import ConfirmDialog from '@/common/components/ConfirmModal';
+import toast from 'react-hot-toast';
 
 const Settings = () => {
+  const router = useRouter();
+  const [signOutShowModal, setSignOutShowModal] = React.useState(false);
+  const { mutateAsync: signOut } = useMutation({
+    mutationFn: AuthService.signOut,
+    onSuccess: () => {
+      router.replace('/auth');
+    },
+  });
   return (
+    <>
+    <ConfirmDialog  
+      isOpen={signOutShowModal}
+      onClose={() => setSignOutShowModal(false)}
+      onConfirm={() => {
+        toast.promise(
+          signOut(),
+          {
+            loading: 'loading...',
+            success: 'Sign out berhasil',
+            error: 'Sign out gagal',  
+          }
+        )
+      }}
+      title="Sign Out"
+      description="Apakah Anda yakin ingin keluar dari akun Anda?"
+      confirmText="Sign Out"
+      cancelText="Cancel"
+      className="bg-red-500 text-white hover:bg-red-600"
+    />
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b px-6 py-5">
-        <div className="flex items-center gap-4">
-          <button className="p-2">
-            <ArrowLeft size={24} />
-          </button>
-          <div>
-            <h1 className="text-xl font-semibold">Settings</h1>
-            <p className="text-sm text-gray-500">Manage your account and preferences</p>
-          </div>
-        </div>
-      </div>
-
       <div className="max-w-2xl mx-auto p-6 space-y-5">
         {/* Profile Section */}
         <div className="bg-white rounded-xl p-6">
@@ -29,7 +50,7 @@ const Settings = () => {
               <p className="text-gray-500">sixseven@yopmail.com</p>
             </div>
           </div>
-          
+
           <button className="w-full flex items-center justify-between p-4 hover:bg-gray-50 rounded-lg transition">
             <div className="flex items-center gap-3">
               <span className="font-medium">Edit Profile</span>
@@ -43,7 +64,7 @@ const Settings = () => {
           <div className="flex items-center gap-2 mb-4">
             <span className="text-base font-semibold">🔔 Notification</span>
           </div>
-          
+
           <div className="space-y-4">
             <div className="flex items-center justify-between py-3">
               <div>
@@ -96,17 +117,17 @@ const Settings = () => {
           <div className="flex items-center gap-2 mb-4">
             <span className="text-base font-semibold">📖 Help & Support</span>
           </div>
-          
+
           <button className="w-full flex items-center justify-between p-4 hover:bg-gray-50 rounded-lg transition">
             <span className="font-medium">Help Center</span>
             <ChevronRight size={20} className="text-gray-400" />
           </button>
-          
+
           <button className="w-full flex items-center justify-between p-4 hover:bg-gray-50 rounded-lg transition">
             <span className="font-medium">Contact Support</span>
             <ChevronRight size={20} className="text-gray-400" />
           </button>
-          
+
           <button className="w-full flex items-center justify-between p-4 hover:bg-gray-50 rounded-lg transition">
             <span className="font-medium">Tutorial Videos</span>
             <ChevronRight size={20} className="text-gray-400" />
@@ -118,12 +139,12 @@ const Settings = () => {
           <div className="flex items-center gap-2 mb-4">
             <span className="text-base font-semibold">📋 Legal</span>
           </div>
-          
+
           <button className="w-full flex items-center justify-between p-4 hover:bg-gray-50 rounded-lg transition">
             <span className="font-medium">Terms of Service</span>
             <ChevronRight size={20} className="text-gray-400" />
           </button>
-          
+
           <button className="w-full flex items-center justify-between p-4 hover:bg-gray-50 rounded-lg transition">
             <span className="font-medium">Privacy Policy</span>
             <ChevronRight size={20} className="text-gray-400" />
@@ -131,7 +152,7 @@ const Settings = () => {
         </div>
 
         {/* Sign Out Button */}
-        <button className="w-full bg-red-50 text-red-500 py-4 rounded-xl flex items-center justify-center gap-2 font-semibold text-base hover:bg-red-100 transition">
+        <button onClick={() => setSignOutShowModal(true)} className="w-full bg-red-50 text-red-500 py-4 rounded-xl flex items-center justify-center gap-2 font-semibold text-base hover:bg-red-100 transition">
           <LogOut size={20} />
           Sign Out
         </button>
@@ -143,6 +164,7 @@ const Settings = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

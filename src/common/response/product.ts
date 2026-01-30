@@ -6,3 +6,11 @@ export interface Product {
     price: number,
     image_url: string
 }
+
+export interface ProductSummary  {
+  productId: string
+  product: string
+  currentStock: number
+  sold7d: number
+  status: "SAFE" | "LOW" | "OUT" | "CRITICAL"
+}
