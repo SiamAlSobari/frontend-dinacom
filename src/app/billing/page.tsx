@@ -90,6 +90,9 @@ export default function BillingPage() {
 
   const { mutate: midtransWebhook } = useMutation({
     mutationFn: BillingService.midtransWebhook,
+    onSuccess: () => {
+      router.push("/dashboard");
+    }
   });
 
   const { mutate: subscribe } = useMutation({

@@ -1,7 +1,10 @@
 import Image from 'next/image'
+import { useRouter } from 'next/navigation';
 import React from 'react'
 
 export default function HeroSection() {
+    const router = useRouter();
+  
   return (
     <section className="relative min-h-240 mb-100 px-6 pt-20">
 
@@ -34,7 +37,9 @@ export default function HeroSection() {
           Get data-driven insights on exactly what products you should order.
         </p>
 
-        <button className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">
+        <button onClick={
+          () => router.push('/dashboard')
+        } className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">
           Get Started Now
         </button>
       </div>

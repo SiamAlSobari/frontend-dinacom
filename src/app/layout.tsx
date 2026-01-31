@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/common/providers/ThemeProvider";
 import { Toaster } from 'react-hot-toast';
 import Script from "next/script";
 import { MIDTRANS_CLIENT_KEY } from "@/common/libs/load-env";
+import AuthGuardEmpty from "@/common/guards/AuthGuardEmpty";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,7 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-                <Script
+        <Script
           src="https://app.sandbox.midtrans.com/snap/snap.js"
           data-client-key={MIDTRANS_CLIENT_KEY}
           strategy="beforeInteractive"
@@ -46,10 +47,12 @@ export default function RootLayout({
           defaultTheme="light"
         >
           <Toaster
-  position="top-right"
-  reverseOrder={false}
-/>
-          <QueryProvider>{children}</QueryProvider>
+            position="top-right"
+            reverseOrder={false}
+          />
+          <AuthGuardEmpty>
+            <QueryProvider>{children}</QueryProvider>
+          </AuthGuardEmpty>
         </ThemeProvider>
       </body>
     </html>

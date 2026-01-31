@@ -5,31 +5,34 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
+import { useUser } from '@/common/stores/user';
+import { useRouter } from 'next/navigation';
 
 export default function LandingPageHeader() {
   const [open, setOpen] = useState(false);
+  const router = useRouter();
 
   // Variants untuk mobile menu (slide dari atas + fade)
-const menuVariants = {
-  closed: {
-    y: "-100%",
-    opacity: 0,
-    transition: {
-      duration: 0.3,
-      ease: "easeInOut",
-    } as const,
-  },
-  open: {
-    y: 0,
-    opacity: 1,
-    transition: {
-      duration: 0.4,
-      ease: "easeOut",
-      when: "beforeChildren" as const,
-      staggerChildren: 0.08,
-    } as const,
-  },
-} satisfies Variants; // ini cara modern & paling aman (TS 4.9+)
+  const menuVariants = {
+    closed: {
+      y: "-100%",
+      opacity: 0,
+      transition: {
+        duration: 0.3,
+        ease: "easeInOut",
+      } as const,
+    },
+    open: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.4,
+        ease: "easeOut",
+        when: "beforeChildren" as const,
+        staggerChildren: 0.08,
+      } as const,
+    },
+  } satisfies Variants; // ini cara modern & paling aman (TS 4.9+)
 
   // Variants untuk setiap item menu (fade + slide up kecil)
   const itemVariants = {
@@ -42,6 +45,8 @@ const menuVariants = {
     closed: { opacity: 0 },
     open: { opacity: 1 },
   };
+
+  const user = useUser();
 
   return (
     <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200">
@@ -77,15 +82,26 @@ const menuVariants = {
 
         {/* Desktop Auth */}
         <div className="hidden md:flex items-center gap-4">
-          <Link href="/login" className="text-gray-700 hover:text-gray-900 font-medium transition">
-            Log in
-          </Link>
-          <Link
-            href="/subscribe"
-            className="bg-blue-600 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-blue-700 transition"
-          >
-            Subscribe
-          </Link>
+          {user ? (
+            <Link href={'/dashboard'}>
+              <button className="px-5 py-2 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600 transition">
+                Dashboard
+              </button>
+            </Link>
+          ) : (
+            <>
+              <Link href="/login">
+                <button className="px-5 py-2 bg-gray-100 text-gray-800 rounded-lg font-medium hover:bg-gray-200 transition">
+                  Log in
+                </button>
+              </Link>
+              <Link href="/subscribe">
+                <button className="px-5 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition">
+                  Subscribe
+                </button>
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile Toggle Button */}
@@ -127,8 +143,8 @@ const menuVariants = {
                     <motion.div key={text} variants={itemVariants}>
                       <Link
                         href={text === "How it works" ? "#how-it-works" :
-                              text === "Features" ? "#features" :
-                              text === "Pricing" ? "#pricing" : "#help"}
+                          text === "Features" ? "#features" :
+                            text === "Pricing" ? "#pricing" : "#help"}
                         onClick={() => setOpen(false)}
                         className="text-lg font-medium text-gray-800 hover:text-blue-600 transition"
                       >
@@ -140,20 +156,36 @@ const menuVariants = {
 
                 {/* Auth Buttons */}
                 <motion.div variants={itemVariants} className="pt-6 border-t border-gray-200 space-y-4">
-                  <Link
-                    onClick={() => setOpen(false)}
-                    href="/login"
-                    className="block text-lg font-medium text-gray-700 hover:text-blue-600 transition text-center"
-                  >
-                    Log in
-                  </Link>
-                  <Link
-                    onClick={() => setOpen(false)}
-                    href="/subscribe"
-                    className="block bg-blue-600 text-white text-center px-8 py-3 rounded-lg font-medium hover:bg-blue-700 transition text-lg"
-                  >
-                    Subscribe
-                  </Link>
+                  {user ? (
+                    <>
+                      <Link href={'/dashboard'}>
+                        <button
+                          onClick={() => setOpen(false)}
+                          className="block text-lg font-medium text-gray-700 hover:text-blue-600 transition w-full text-center"
+                        >
+                          Dashboard
+                        </button>
+                      </Link>
+                    </>
+                  ) : (
+                    <>
+
+                      <Link
+                        onClick={() => setOpen(false)}
+                        href="/login"
+                        className="block text-lg font-medium text-gray-700 hover:text-blue-600 transition text-center"
+                      >
+                        Log in
+                      </Link>
+                      <Link
+                        onClick={() => setOpen(false)}
+                        href="/subscribe"
+                        className="block bg-blue-600 text-white text-center px-8 py-3 rounded-lg font-medium hover:bg-blue-700 transition text-lg"
+                      >
+                        Subscribe
+                      </Link>
+                    </>
+                  )}
                 </motion.div>
               </div>
             </motion.div>
