@@ -7,6 +7,7 @@ import Image from "next/image"
 import { useQuery } from "@tanstack/react-query"
 import ProductService from "@/services/ProductService"
 import { Product } from "@/common/response/product"
+import { PaymentModal } from "./components/PaymentModal"
 
 type CartItem = {
   product: Product
@@ -20,6 +21,7 @@ export default function POSPage() {
   const [selectedCategory, setSelectedCategory] = React.useState<string>("ALL")
   const [editingItemId, setEditingItemId] = React.useState<string | null>(null)
   const [tempQuantity, setTempQuantity] = React.useState("")
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = React.useState(false)
 
   const { data: productData } = useQuery({
     queryKey: ['products-pos'],
@@ -138,7 +140,11 @@ export default function POSPage() {
       alert("Keranjang masih kosong!")
       return
     }
-    alert("Checkout berhasil!")
+    setIsPaymentModalOpen(true)
+  }
+
+  const handlePaymentSuccess = () => {
+    alert("Pembayaran berhasil! Terima kasih.")
     setCart([])
   }
 
@@ -167,7 +173,7 @@ export default function POSPage() {
                   />
                 </div>
 
-                <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                <div className="flex gap-2 overflow-x-auto pb-2 hide-scrollbar">
                   {categories.map((category) => (
                     <button
                       key={category}
@@ -195,7 +201,7 @@ export default function POSPage() {
                   <Card
                     key={product.id}
                     className="overflow-hidden cursor-pointer p-0 hover:shadow-xl hover:scale-105 transition-all group"
-                    onClick={() => addToCart(product)} 
+                    onClick={() => addToCart(product)}
                   >
                     <div className="relative h-36 bg-gradient-to-br from-gray-100 to-gray-50">
                       {product.image_url ? (
@@ -253,7 +259,7 @@ export default function POSPage() {
             )}
           </div>
 
-          {/* Cart Section */}
+          {/* Cart Section - Same as before, keeping it unchanged */}
           <div className="lg:col-span-1">
             <Card className="sticky top-6 shadow-lg">
               <div className="p-4 border-b bg-gradient-to-r from-blue-600 to-blue-700">
@@ -291,7 +297,7 @@ export default function POSPage() {
                     <p className="text-xs text-gray-400">Pilih produk untuk memulai transaksi</p>
                   </div>
                 ) : (
-                  <div className="space-y-3 max-h-[450px] overflow-y-auto pr-2 scrollbar-thin">
+                  <div className="space-y-3 max-h-[450px] overflow-y-auto pr-2 custom-scrollbar">
                     {cart.map((item) => (
                       <div key={item.product.id} className="border-2 border-gray-100 rounded-xl p-3 bg-gradient-to-br from-white to-gray-50 hover:border-blue-200 transition-all">
                         <div className="flex items-start gap-3 mb-3">
@@ -326,7 +332,6 @@ export default function POSPage() {
                         </div>
 
                         <div className="flex items-center justify-between pt-3 border-t border-gray-200">
-                          {/* Quantity Controls */}
                           <div className="flex items-center gap-1">
                             <button
                               onClick={(e) => {
@@ -372,7 +377,6 @@ export default function POSPage() {
                             </button>
                           </div>
 
-                          {/* Subtotal */}
                           <div className="text-right">
                             <span className="font-bold text-blue-600">
                               Rp {item.subtotal.toLocaleString('id-ID')}
@@ -414,29 +418,37 @@ export default function POSPage() {
         </div>
 
         <style jsx global>{`
-          .scrollbar-hide::-webkit-scrollbar {
+          .hide-scrollbar::-webkit-scrollbar {
             display: none;
           }
-          .scrollbar-hide {
+          .hide-scrollbar {
             -ms-overflow-style: none;
             scrollbar-width: none;
           }
-          .scrollbar-thin::-webkit-scrollbar {
+          .custom-scrollbar::-webkit-scrollbar {
             width: 6px;
           }
-          .scrollbar-thin::-webkit-scrollbar-track {
+          .custom-scrollbar::-webkit-scrollbar-track {
             background: #f1f1f1;
             border-radius: 10px;
           }
-          .scrollbar-thin::-webkit-scrollbar-thumb {
+          .custom-scrollbar::-webkit-scrollbar-thumb {
             background: #cbd5e1;
             border-radius: 10px;
           }
-          .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+          .custom-scrollbar::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
           }
         `}</style>
       </div>
+
+      {/* Payment Modal */}
+      <PaymentModal
+        isOpen={isPaymentModalOpen}
+        onClose={() => setIsPaymentModalOpen(false)}
+        total={total}
+        onPaymentSuccess={handlePaymentSuccess}
+      />
     </div>
   )
 }
