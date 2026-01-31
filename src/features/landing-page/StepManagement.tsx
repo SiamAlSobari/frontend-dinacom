@@ -72,7 +72,7 @@ function StepCard({ item }: { item: StepItem }) {
 
 export default function StepManagement() {
   return (
-    <section className="relative py-60 bg-white overflow-hidden">
+    <section className="relative py-60  overflow-hidden">
 
       {/* TITLE */}
       <div className="relative z-10 max-w-5xl mx-auto px-6 text-center mb-14">

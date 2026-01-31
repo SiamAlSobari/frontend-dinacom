@@ -5,6 +5,8 @@ import Image from "next/image";
 import { Package, Lightbulb, CreditCard } from "lucide-react";
 import StepManagement from "@/features/landing-page/StepManagement";
 import HeroSection from "@/features/landing-page/HeroSection";
+import Features from "@/features/landing-page/Features";
+import Pricing from "@/features/landing-page/Pricing";
 
 
 
@@ -14,6 +16,8 @@ export default function Home() {
       <LandingPageHeader />
       <HeroSection  />
       <StepManagement />
+      <Features />
+      <Pricing />
     </div>
   );
 }

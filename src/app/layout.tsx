@@ -4,6 +4,8 @@ import "./globals.css";
 import QueryProvider from "@/common/providers/QueryProvider";
 import { ThemeProvider } from "@/common/providers/ThemeProvider";
 import { Toaster } from 'react-hot-toast';
+import Script from "next/script";
+import { MIDTRANS_CLIENT_KEY } from "@/common/libs/load-env";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,6 +29,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+                <Script
+          src="https://app.sandbox.midtrans.com/snap/snap.js"
+          data-client-key={MIDTRANS_CLIENT_KEY}
+          strategy="beforeInteractive"
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

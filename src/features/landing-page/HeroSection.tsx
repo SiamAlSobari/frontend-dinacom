@@ -6,14 +6,13 @@ export default function HeroSection() {
     <section className="relative min-h-240 mb-100 px-6 pt-20">
 
       {/* WRAPPER BG (ini yang rounded & overflow hidden) */}
-      <div className="absolute inset-0 bg-linear-to-br from-blue-600 to-blue-800 rounded-b-[50px] overflow-hidden z-0">
+      <div className="absolute inset-0 bg-linear-to-br from-blue-600/5 to-blue-800/5 rounded-b-[50px] overflow-hidden z-0">
 
         <Image
           src="/backgrounds/hero_bg.png"
           alt="Hero Background"
           fill
           priority
-          className="object-cover"
         />
 
         <div className="absolute inset-0 bg-linear-to-br from-blue-600/80 to-blue-800/80" />

@@ -7,15 +7,11 @@ import {
     ChartTooltipContent,
     type ChartConfig,
 } from "@/common/shadcn-ui/chart"
+import { RevenueTrend } from "@/common/response/analytic"
 
 export const description = "Revenue per Week Chart"
 
-const chartData = [
-    { week: "Week 1", revenue: 50 },
-    { week: "Week 2", revenue: 60 },
-    { week: "Week 3", revenue: 40 },
-    { week: "Week 4", revenue: 36 },
-]
+
 
 const chartConfig = {
     revenue: {
@@ -24,11 +20,15 @@ const chartConfig = {
     },
 } satisfies ChartConfig
 
-export function RevenueChart() {
+interface Props {
+    data: RevenueTrend[]
+}
+
+export function RevenueChart({ data }: Props) {
     return (
         <ChartContainer config={chartConfig}>
             <LineChart
-                data={chartData}
+                data={data}
                 margin={{
                     left: 12,
                     right: 12,

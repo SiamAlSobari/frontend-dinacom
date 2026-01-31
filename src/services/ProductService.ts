@@ -1,6 +1,6 @@
 import { ApiResponse } from "@/common/interfaces/response";
 import { apiClient } from "@/common/libs/axios";
-import { Product } from "@/common/response/product";
+import { Product, ProductSummary } from "@/common/response/product";
 interface CreateProductPayload {
     name: string;
     unit: string;
@@ -29,6 +29,21 @@ class ProductService {
     public async getProduct(){
         const response = await apiClient<ApiResponse<Product[]>>({ method: 'get', url: '/products' });
         return response.data
+    }
+
+    public async getProductPaginated(page: number, limit: number){
+        const response = await apiClient<ApiResponse<Product[]>>({ method: 'get', url: `/products?page=${page}&limit=${limit}` });
+        return response
+    }
+
+    public async deleteProduct(productId: string){
+        const response = await apiClient({ method: 'delete', url: `/products/${productId}` });
+        return response
+    }
+
+    public async getProductSummary(){
+        const response = await apiClient<ApiResponse<ProductSummary[]>>({ method: 'get', url: '/products/summary' });
+        return response
     }
 
 }
