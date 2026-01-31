@@ -6,9 +6,11 @@ import Image from 'next/image';
 import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { useUser } from '@/common/stores/user';
+import { useRouter } from 'next/navigation';
 
 export default function LandingPageHeader() {
   const [open, setOpen] = useState(false);
+  const router = useRouter();
 
   // Variants untuk mobile menu (slide dari atas + fade)
   const menuVariants = {

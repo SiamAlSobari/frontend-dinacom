@@ -1,7 +1,9 @@
 import { AI_RECO_DUMMY } from "@/common/dummy/ai_reco";
 import { ApiResponse } from "@/common/interfaces/response";
 import { apiClient } from "@/common/libs/axios";
-import { AiRecommendations, AiRuns, PriorityAction } from "@/common/response/ai";
+import { AiRecommendations, AiRuns, NstInsights, PriorityAction } from "@/common/response/ai";
+
+
 
 class AiService {
     public async aiRun(){
@@ -11,6 +13,10 @@ class AiService {
     
     public async generateAiRecommendations(){
         const response = await apiClient<ApiResponse<AiRecommendations[]>>({ method: 'get', url: `/ai/recommendation` });
+        return response.data
+    }
+    public async aiRecommendationsHighRisk(){
+        const response = await apiClient<ApiResponse<AiRecommendations[]>>({ method: 'get', url: `/ai/recommendation/high-risk` });
         return response.data
     }
 
@@ -34,6 +40,11 @@ class AiService {
             data: { from, to }
         });
         return response
+    }
+
+    public async getAiInsights(){
+        const response = await apiClient<ApiResponse<NstInsights>>({ method: 'get', url: `/ai/insights` });
+        return response.data
     }
 }
 

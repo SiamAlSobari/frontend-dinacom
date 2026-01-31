@@ -20,6 +20,19 @@ export enum AiRecommendationsRiskLevel {
   LOW = "LOW",
 }
 
+
+export interface NstInsights {
+  id: string
+  ai_run_id: string
+  pattern_trend_summary: string
+  urgent: string
+  medium: string
+  low: string
+  created_at: Date
+  updated_at: Date
+  deleted_at: Date | null
+}
+
 export interface AiRecommendations {
   id: string
   ai_run_id: string

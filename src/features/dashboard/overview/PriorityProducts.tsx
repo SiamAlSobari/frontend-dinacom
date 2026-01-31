@@ -5,8 +5,10 @@ import { AlertTriangle, TrendingUp, Package } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import AiService from "@/services/AiService";
 import { PriorityAction } from "@/common/response/ai";
+import { useRouter } from "next/navigation";
 
 export function PriorityProducts() {
+    const router = useRouter();
   const { data: priorityData, isLoading } = useQuery({
     queryKey: ['priority_actions'],
     queryFn: () => AiService.getPriorityActions(),
@@ -143,7 +145,7 @@ export function PriorityProducts() {
 
         {priorities.length > 0 && (
           <div className="mt-4 pt-4 border-t border-gray-100">
-            <button className="w-full text-center text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors">
+            <button onClick={()=> router.push('/dashboard/stock/recommendation')} className="w-full text-center text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors">
               View All Priority Actions →
             </button>
           </div>
