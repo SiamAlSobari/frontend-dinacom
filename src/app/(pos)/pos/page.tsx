@@ -249,7 +249,7 @@ export default function POSPage() {
                     className="overflow-hidden cursor-pointer p-0 hover:shadow-xl hover:scale-105 transition-all group"
                     onClick={() => addToCart(product)}
                   >
-                    <div className="relative h-36 bg-gradient-to-br from-gray-100 to-gray-50">
+                    <div className="relative h-36 bg-linear-to-br from-gray-100 to-gray-50">
                       {product.image_url ? (
                         <Image
                           src={product.image_url}
@@ -268,7 +268,7 @@ export default function POSPage() {
                         </div>
                       )}
                       {inCart && (
-                        <div className="absolute top-2 right-2 w-7 h-7 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold shadow-lg">
+                        <div className="absolute top-2 right-2 w-7 h-7 bg-linear-to-br from-blue-500 to-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold shadow-lg">
                           {inCart.quantity}
                         </div>
                       )}
@@ -307,7 +307,7 @@ export default function POSPage() {
           {/* Cart Section */}
           <div className="lg:col-span-1">
             <Card className="sticky top-6 p-0 shadow-lg">
-              <div className="p-4 border-b bg-gradient-to-r from-blue-600 to-blue-700">
+              <div className="p-4 border-b bg-linear-to-r from-blue-600 to-blue-700">
                 <div className="flex items-center justify-between text-white">
                   <div className="flex items-center gap-2">
                     <ShoppingCart size={20} />
@@ -342,9 +342,9 @@ export default function POSPage() {
                     <p className="text-xs text-gray-400">Pilih produk untuk memulai transaksi</p>
                   </div>
                 ) : (
-                  <div className="space-y-3 max-h-[450px] overflow-y-auto pr-2 custom-scrollbar">
+                  <div className="space-y-3 max-h-125.5 overflow-y-auto pr-2 custom-scrollbar">
                     {cart.map((item) => (
-                      <div key={item.product.id} className="border-2 border-gray-100 rounded-xl p-3 bg-gradient-to-br from-white to-gray-50 hover:border-blue-200 transition-all">
+                      <div key={item.product.id} className="border-2 border-gray-100 rounded-xl p-3 bg-linear-to-br from-white to-gray-50 hover:border-blue-200 transition-all">
                         <div className="flex items-start gap-3 mb-3">
                           <div className="w-14 h-14 bg-gray-200 rounded-lg shrink-0 overflow-hidden">
                             {item.product.image_url && (
@@ -450,7 +450,7 @@ export default function POSPage() {
 
                     <button
                       onClick={handleCheckout}
-                      className="w-full mt-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3.5 rounded-xl font-bold hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2 text-lg"
+                      className="w-full mt-4 bg-linear-to-r from-blue-600 to-blue-700 text-white py-3.5 rounded-xl font-bold hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2 text-lg"
                     >
                       <DollarSign size={22} />
                       Checkout Sekarang

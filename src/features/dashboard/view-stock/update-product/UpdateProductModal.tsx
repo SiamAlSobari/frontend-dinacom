@@ -78,7 +78,7 @@ export function UpdateProductModal({ product, onClose }: UpdateProductModalProps
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-125 max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Update Product</DialogTitle>
         </DialogHeader>
