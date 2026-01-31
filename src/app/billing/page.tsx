@@ -217,7 +217,7 @@ export default function BillingPage() {
                   {plan.features.map((feature, index) => (
                     <li key={index} className="flex items-start">
                       <svg
-                        className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0"
+                        className="w-5 h-5 text-green-500 mr-3 mt-0.5 shrink-0"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -251,7 +251,7 @@ export default function BillingPage() {
                     </button>
                   </DialogTrigger>
 
-                  <DialogContent className="sm:max-w-[400px]">
+                  <DialogContent className="sm:max-w-100">
                     {user ? (
                       <>
                         {/* ✅ SUDAH LOGIN */}
