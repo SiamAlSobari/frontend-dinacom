@@ -69,7 +69,7 @@ export function ProductList({
                   >
                     <td className="p-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-gradient-to-br from-gray-100 to-gray-50 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden border border-gray-200 group-hover:border-blue-300 transition-colors">
+                        <div className="w-12 h-12 bg-linear-to-br from-gray-100 to-gray-50 rounded-xl flex items-center justify-center shrink-0 overflow-hidden border border-gray-200 group-hover:border-blue-300 transition-colors">
                           {product.image_url ? (
                             <Image
                               src={product.image_url}
@@ -187,7 +187,7 @@ export function ProductList({
                       <button
                         key={page}
                         onClick={() => onPageChange(page)}
-                        className={`min-w-[36px] h-9 rounded-lg transition-all text-sm font-medium ${
+                        className={`min-w-9 h-9 rounded-lg transition-all text-sm font-medium ${
                           page === currentPage
                             ? "bg-blue-600 text-white shadow-sm"
                             : "hover:bg-gray-100 text-gray-700"
