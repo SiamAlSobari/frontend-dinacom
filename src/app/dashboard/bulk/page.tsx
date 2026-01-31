@@ -5,8 +5,9 @@ import { BulkRow } from "@/common/types/bulk"
 import { BulkInfoBanner } from "@/features/dashboard/bulk/BulkInfoBanner"
 import { BulkTransactionRow } from "@/features/dashboard/bulk/BulkStransactionRow"
 import { BulkTableHeader } from "@/features/dashboard/bulk/BulkTableHeader"
+import ActivityService from "@/services/ActivityService"
 import TransactionService, { BulkTransactionPayload } from "@/services/TransactionService"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import React from "react"
 
 export default function BulkTransactionPage() {
@@ -24,6 +25,11 @@ export default function BulkTransactionPage() {
         onSuccess: () => {
             alert("Bulk transaction successful!")
         }
+    })
+
+    const { data: activities} = useQuery({
+        queryKey: ['user-activities'],
+        queryFn: () => ActivityService.getActivities(),
     })
 
     const handleAddRow = () => {
@@ -118,10 +124,6 @@ export default function BulkTransactionPage() {
                     </div>
                 </div>
             </Card>
-
-            <pre className="mt-6 bg-gray-900 text-green-400 text-xs p-4 rounded-lg overflow-auto max-h-80">
-                {JSON.stringify(rows, null, 2)}
-            </pre>
         </div>
     )
 }
