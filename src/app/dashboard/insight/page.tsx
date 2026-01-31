@@ -25,7 +25,6 @@ export default function InsightsPage() {
       <AiInsightsSummary />
 
       {/* Priorities This Week */}
-      <PriorityProducts />
 
       {/* Charts Section */}
       <div className="grid grid-cols-1 mt-10 lg:grid-cols-2 gap-6 mb-6">

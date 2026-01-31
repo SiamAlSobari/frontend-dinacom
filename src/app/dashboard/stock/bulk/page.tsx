@@ -23,6 +23,9 @@ export default function BulkTransactionPage() {
     const { mutateAsync: bulkTransaction, isPending: isBulkTransactionPending } = useMutation({
         mutationKey: ["bulk-transaction"],
         mutationFn: TransactionService.bulkTransaction,
+        onSuccess: () => {
+            setRows([{ date: undefined, product: { id: "", name: "", price: 0 }, quantity: "", type: "SALE", method: "" }])
+        }
     })
 
 
