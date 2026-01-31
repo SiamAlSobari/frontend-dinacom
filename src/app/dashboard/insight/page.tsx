@@ -5,6 +5,7 @@ import { StableDemandChart } from '@/features/dashboard/insight/StableDemandChar
 import { RevenueChart } from '@/features/dashboard/insight/RevenueChart';
 import { useQuery } from '@tanstack/react-query';
 import AnalyticService from '@/services/AnalyticService';
+import { PriorityProducts } from '@/features/dashboard/overview/PriorityProducts';
 
 export default function InsightsPage() {
   const priorityProducts = [
@@ -118,29 +119,7 @@ export default function InsightsPage() {
       </div>
 
       {/* Priorities This Week */}
-      <div className="bg-white rounded-xl p-6 mb-6 border border-gray-100">
-        <h2 className="text-lg font-semibold text-gray-900 mb-2">Priorities This Week</h2>
-        <p className="text-sm text-gray-500 mb-4">Focus on these products to optimize your stock levels</p>
-
-        <div className="space-y-3">
-          {priorityProducts.map((product) => (
-            <div key={product.id} className={`flex items-center justify-between p-4 rounded-lg ${product.bgColor} ${product.borderColor}`}>
-              <div className="flex items-center gap-3">
-                <div className={`w-8 h-8 rounded-full ${product.numberBg} flex items-center justify-center text-sm font-bold ${product.numberText}`}>
-                  {product.id}
-                </div>
-                <div>
-                  <p className="font-semibold text-gray-900">{product.name}</p>
-                  <p className="text-sm text-gray-500">{product.description}</p>
-                </div>
-              </div>
-              <span className={`px-3 py-1 rounded-md text-xs font-semibold ${product.badgeBg} ${product.badgeText}`}>
-                {product.status}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
+      <PriorityProducts />
 
       {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
@@ -164,50 +143,6 @@ export default function InsightsPage() {
         </div>
       </div>
 
-      {/* Stable Demand Products Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Left - Blue indicators */}
-        <div className="bg-white rounded-xl p-6 border border-gray-100">
-          <div className="flex items-center gap-2 mb-2">
-            <TrendingUp size={18} className="text-blue-500" />
-            <h2 className="text-lg font-semibold text-gray-900">Stable Demand Products</h2>
-          </div>
-          <p className="text-sm text-gray-500 mb-4">Products with consistent, predictable sales patterns</p>
-
-          <div className="space-y-2">
-            {stableDemandProducts.map((product, index) => (
-              <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-blue-50 border border-blue-100">
-                <p className="font-medium text-gray-900">{product.name}</p>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-gray-600">{product.status}</span>
-                  <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Right - Red indicators */}
-        <div className="bg-white rounded-xl p-6 border border-gray-100">
-          <div className="flex items-center gap-2 mb-2">
-            <TrendingUp size={18} className="text-red-500" />
-            <h2 className="text-lg font-semibold text-gray-900">Stable Demand Products</h2>
-          </div>
-          <p className="text-sm text-gray-500 mb-4">Products with consistent, predictable sales patterns</p>
-
-          <div className="space-y-2">
-            {stableDemandProductsRed.map((product, index) => (
-              <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-red-50 border border-red-100">
-                <p className="font-medium text-gray-900">{product.name}</p>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-gray-600">{product.status}</span>
-                  <div className="w-2 h-2 rounded-full bg-red-500"></div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
     </div>
   );
 }

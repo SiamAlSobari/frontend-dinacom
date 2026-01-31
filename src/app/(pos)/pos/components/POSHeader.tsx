@@ -1,9 +1,12 @@
 "use client"
 import Image from "next/image"
 import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+import { ArrowLeft } from "lucide-react"
 
 export function POSHeader() {
   const [currentTime, setCurrentTime] = useState<Date | null>(null)
+  const router = useRouter()
 
   useEffect(() => {
     setCurrentTime(new Date())
@@ -56,6 +59,14 @@ export function POSHeader() {
               )}
             </div>
 
+            {/* Back to Dashboard Button */}
+            <button
+              onClick={() => router.push('/dashboard')}
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span className="hidden sm:inline">Dashboard</span>
+            </button>
           </div>
         </div>
       </div>

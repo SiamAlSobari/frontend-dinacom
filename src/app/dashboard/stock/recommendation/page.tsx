@@ -1,84 +1,112 @@
 "use client"
 
 import React from 'react';
-import { ArrowLeft, AlertTriangle, Info, CheckCircle, Clock } from 'lucide-react';
+import { AlertTriangle, Info, CheckCircle, Clock } from 'lucide-react';
 import { Card } from '@/common/shadcn-ui/card';
 import { Button } from '@/common/shadcn-ui/button';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import AiService from '@/services/AiService';
+import { AiRecommendations } from '@/common/response/ai';
+import toast from 'react-hot-toast';
+
+interface AiRecommendation {
+  id: string;
+  ai_run_id: string;
+  product_id: string;
+  current_stock: number;
+  recommended_action: 'RESTOCK' | 'WAIT' | 'REDUCE';
+  quantity_min: number;
+  quantity_max: number;
+  risk_level: 'HIGH' | 'MEDIUM' | 'LOW';
+  days_until_stockout: number;
+  reason_text: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
+  product?: {
+    name: string;
+    unit: string;
+  };
+}
 
 export default function RecommendationPage() {
-  const [activeTab, setActiveTab] = React.useState<'all' | 'urgent' | 'moderate'>('all');
+  const [activeTab, setActiveTab] = React.useState<'all' | 'urgent' | 'medium' | 'low'>('all');
+  const queryClient = useQueryClient();
 
-  const recommendations = [
-    {
-      id: 1,
-      product: "Dark Chocolate Bar 100g",
-      priority: "HIGH RISK",
-      priorityColor: "bg-red-600",
-      isNew: true,
-      currentStock: 2,
-      baseStock: 50,
-      action: "Restock",
-      recommendedQuantity: 80,
-      reason: "Recent sales trend + low incoming purchase orders. Average daily sales: 6 units.",
-      confidence: 94,
-      confidenceColor: "bg-green-600"
-    },
-    {
-      id: 2,
-      product: "Greek Yogurt 500g",
-      priority: "HIGH RISK",
-      priorityColor: "bg-red-600",
-      isNew: false,
-      currentStock: 23,
-      baseStock: 100,
-      action: "Restock",
-      recommendedQuantity: 50,
-      reason: "Inventory expected to be depleted soon. Average daily sales: 5.5 units.",
-      confidence: 89,
-      confidenceColor: "bg-green-600"
-    },
-    {
-      id: 3,
-      product: "Avocado (Large)",
-      priority: "MODERATE",
-      priorityColor: "bg-amber-500",
-      isNew: false,
-      currentStock: 56,
-      baseStock: 120,
-      action: "Monitor",
-      recommendedQuantity: 40,
-      reason: "Stock level declining steadily. Average daily sales: 7.8 units.",
-      confidence: 76,
-      confidenceColor: "bg-green-600"
-    },
-    {
-      id: 4,
-      product: "Olive Oil 750ml",
-      priority: "LOW",
-      priorityColor: "bg-blue-600",
-      isNew: false,
-      currentStock: 89,
-      baseStock: 100,
-      action: "Monitor",
-      recommendedQuantity: 30,
-      reason: "Stock level is sufficient. Average daily sales: 3.2 units.",
-      confidence: 82,
-      confidenceColor: "bg-green-600"
-    }
-  ];
-
-  const filteredRecommendations = recommendations.filter(rec => {
-    if (activeTab === 'urgent') return rec.priority === 'HIGH RISK';
-    if (activeTab === 'moderate') return rec.priority === 'MODERATE';
-    return true;
+  const { data: recommendationAiData, isLoading } = useQuery({
+    queryKey: ['ai_recommendations'],
+    queryFn: () => AiService.generateAiRecommendations(),
   });
 
+  const { mutateAsync: applyRecommendation, isPending } = useMutation({
+    mutationFn: AiService.applyRecommendation,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['ai_recommendations'] });
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+    },
+  });
+
+  const filteredRecommendations = recommendationAiData?.filter((rec: AiRecommendations) => {
+    if (activeTab === 'urgent') return rec.risk_level === 'HIGH';
+    if (activeTab === 'medium') return rec.risk_level === 'MEDIUM';
+    if (activeTab === 'low') return rec.risk_level === 'LOW';
+    return true;
+  }) || [];
+
+  const getPriorityColor = (riskLevel: string) => {
+    switch (riskLevel) {
+      case 'HIGH':
+        return 'bg-red-600';
+      case 'MEDIUM':
+        return 'bg-yellow-600';
+      case 'LOW':
+        return 'bg-green-600';
+      default:
+        return 'bg-gray-600';
+    }
+  };
+
+  const getCardBorderColor = (riskLevel: string) => {
+    switch (riskLevel) {
+      case 'HIGH':
+        return 'border-red-300 bg-red-50';
+      case 'MEDIUM':
+        return 'border-yellow-300 bg-yellow-50';
+      case 'LOW':
+        return 'border-green-300 bg-green-50';
+      default:
+        return 'border-gray-300 bg-gray-50';
+    }
+  };
+
+  const getRecommendedQuantity = (rec: AiRecommendation) => {
+    if (rec.recommended_action === 'RESTOCK') {
+      return `${rec.quantity_min} - ${rec.quantity_max}`;
+    }
+    if (rec.recommended_action === 'REDUCE') {
+      return `Reduce by ${rec.quantity_max}`;
+    }
+    return 'Maintain current stock';
+  };
+
+  const handleApplyRecommendation = async (recommendationId: string, productName: string) => {
+    toast.promise(
+      applyRecommendation(recommendationId),
+      {
+        loading: `Applying recommendation for ${productName}...`,
+        success: () => {
+          return `✅ Stock updated  units`;
+        },
+        // error: (err) => 
+        //   err?.response?.data?.message || 'Failed to apply recommendation ❌',
+      }
+    );
+  };
 
   return (
-    <div className='mt-9 p-4 sm:p-6  lg:p-10 min-h-screen bg-gray-50'>
-
+    <div className='mt-9 p-4 sm:p-6 lg:p-10 min-h-screen bg-gray-50'>
       {/* Info Banner */}
-      <div className="bg-linear-to-r from-purple-600 to-purple-700 rounded-xl p-6 mb-6 text-white">
+      <div className="bg-gradient-to-r from-purple-600 to-purple-700 rounded-xl p-6 mb-6 text-white">
         <div className="flex items-start gap-3">
           <AlertTriangle size={24} className="shrink-0 mt-0.5" />
           <div>
@@ -102,7 +130,7 @@ export default function RecommendationPage() {
               : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
           }`}
         >
-          All
+          All ({recommendationAiData?.length || 0})
         </button>
         <button
           onClick={() => setActiveTab('urgent')}
@@ -112,17 +140,27 @@ export default function RecommendationPage() {
               : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
           }`}
         >
-          Urgent
+          Urgent ({recommendationAiData?.filter((r: AiRecommendations) => r.risk_level === 'HIGH').length || 0})
         </button>
         <button
-          onClick={() => setActiveTab('moderate')}
+          onClick={() => setActiveTab('medium')}
           className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
-            activeTab === 'moderate'
+            activeTab === 'medium'
               ? 'bg-blue-600 text-white'
               : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
           }`}
         >
-          Moderate
+          Medium ({recommendationAiData?.filter((r: AiRecommendations) => r.risk_level === 'MEDIUM').length || 0})
+        </button>
+        <button
+          onClick={() => setActiveTab('low')}
+          className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
+            activeTab === 'low'
+              ? 'bg-blue-600 text-white'
+              : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
+          }`}
+        >
+          Low ({recommendationAiData?.filter((r: AiRecommendations) => r.risk_level === 'LOW').length || 0})
         </button>
       </div>
 
@@ -130,80 +168,94 @@ export default function RecommendationPage() {
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 flex items-start gap-3">
         <Info size={18} className="text-blue-600 shrink-0 mt-0.5" />
         <p className="text-sm text-blue-800">
-          If you need to adjust suggested quantities, you can do so in the stock management section.
+          Click "Apply" to automatically adjust stock based on AI recommendations. The action will update inventory and mark the recommendation as complete.
         </p>
       </div>
 
-      {/* Recommendations List */}
-      <div className="space-y-4">
-        {filteredRecommendations.map((rec) => (
-          <Card key={rec.id} className="bg-red-50 border-2 border-red-300 rounded-xl overflow-hidden">
-            <div className="p-5">
-              {/* Header */}
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <h3 className="text-base font-semibold text-gray-900">{rec.product}</h3>
-                  <span className={`${rec.priorityColor} text-white text-xs font-bold px-2.5 py-1 rounded`}>
-                    {rec.priority}
-                  </span>
-                  {rec.isNew && (
-                    <span className="bg-blue-600 text-white text-xs font-bold px-2.5 py-1 rounded">
-                      New
+      {/* Loading State */}
+      {isLoading ? (
+        <div className="flex items-center justify-center py-20">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        </div>
+      ) : filteredRecommendations.length === 0 ? (
+        <Card className="p-12 text-center">
+          <p className="text-gray-500">No recommendations available at this time.</p>
+        </Card>
+      ) : (
+        /* Recommendations List */
+        <div className="space-y-4">
+          {filteredRecommendations.map((rec: AiRecommendations) => (
+            <Card key={rec.id} className={`${getCardBorderColor(rec.risk_level)} border-2 rounded-xl overflow-hidden`}>
+              <div className="p-5">
+                {/* Header */}
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-base font-semibold text-gray-900">
+                      {rec.product?.name || `Product ${rec.product_id.slice(0, 8)}`}
+                    </h3>
+                    <span className={`${getPriorityColor(rec.risk_level)} text-white text-xs font-bold px-2.5 py-1 rounded`}>
+                      {rec.risk_level}
                     </span>
+                    <span className={`${rec.recommended_action === 'RESTOCK' ? 'bg-red-600' : rec.recommended_action === 'WAIT' ? 'bg-green-600' : 'bg-yellow-600'} text-white text-xs font-bold px-2.5 py-1 rounded`}>
+                      {rec.recommended_action}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Stock Info */}
+                <div className="text-sm text-gray-700 mb-4">
+                  <span>Current: <strong className="text-gray-900">{rec.current_stock} {rec.product?.unit || 'units'}</strong></span>
+                  <span className="mx-2">•</span>
+                  <span>Range: <strong className="text-gray-900">{rec.quantity_min} - {rec.quantity_max} units</strong></span>
+                  {rec.days_until_stockout > 0 && (
+                    <>
+                      <span className="mx-2">•</span>
+                      <span>Stockout in: <strong className="text-red-600">{rec.days_until_stockout} days</strong></span>
+                    </>
                   )}
                 </div>
-              </div>
 
-              {/* Stock Info */}
-              <div className="text-sm text-gray-700 mb-4">
-                <span>Current: <strong className="text-gray-900">{rec.currentStock} units</strong></span>
-                <span className="mx-2">•</span>
-                <span>Base: <strong className="text-gray-900">{rec.baseStock} units</strong></span>
-                <span className="mx-2">•</span>
-                <span>Action: <strong className="text-red-600">{rec.action}</strong></span>
-              </div>
+                {/* Recommendation Box */}
+                <div className="bg-white rounded-lg p-4 mb-4 border border-gray-200">
+                  <div className="flex items-baseline gap-2 mb-2">
+                    <span className="text-sm text-gray-600">Recommended quantity:</span>
+                    <span className="text-lg font-bold text-blue-600">{getRecommendedQuantity(rec)}</span>
+                    <span className="text-sm text-gray-600">{rec.product?.unit || 'units'}</span>
+                  </div>
+                  <div className="text-xs text-gray-700">
+                    <span className="font-semibold">Reason:</span> {rec.reason_text}
+                  </div>
+                </div>
 
-              {/* Recommendation Box */}
-              <div className="bg-gray-50 rounded-lg p-4 mb-4 border border-gray-200">
-                <div className="flex items-baseline gap-2 mb-2">
-                  <span className="text-sm text-gray-600">Recommended quantity:</span>
-                  <span className="text-lg font-bold text-blue-600">{rec.recommendedQuantity}</span>
-                  <span className="text-sm text-gray-600">units</span>
+                {/* Timestamp */}
+                <div className="text-xs text-gray-500 mb-4">
+                  Updated: {new Date(rec.updated_at).toLocaleString('id-ID')}
                 </div>
-                <div className="text-xs text-gray-700">
-                  <span className="font-semibold">Reason:</span> {rec.reason} <span className="font-semibold">Confidence: {rec.confidence}%</span>
-                </div>
-              </div>
 
-              {/* Confidence Bar */}
-              <div className="mb-4">
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs font-medium text-gray-700">Confidence Score</span>
-                  <span className="text-xs font-bold text-gray-900">{rec.confidence}%</span>
-                </div>
-                <div className="w-full bg-gray-300 rounded-full h-2 overflow-hidden">
-                  <div 
-                    className={`h-2 ${rec.confidenceColor} transition-all duration-300`}
-                    style={{ width: `${rec.confidence}%` }}
-                  ></div>
-                </div>
-              </div>
+                {/* Actions */}
+                {rec.recommended_action !== 'WAIT' && (
+                  <div className="flex gap-3">
+                    <Button 
+                      onClick={() => handleApplyRecommendation(rec.id, rec.product?.name || 'Product')}
+                      disabled={isPending}
+                      className="flex-1 bg-green-600 hover:bg-green-700 text-white font-medium h-10 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <CheckCircle size={16} className="mr-2" />
+                      {isPending ? 'Applying...' : 'Apply Recommendation'}
+                    </Button>
+                  </div>
+                )}
 
-              {/* Actions */}
-              <div className="flex gap-3">
-                <Button className="flex-1 bg-green-600 hover:bg-green-700 text-white font-medium h-10 rounded-lg">
-                  <CheckCircle size={16} className="mr-2" />
-                  Done
-                </Button>
-                <Button className="flex-1 bg-gray-700 hover:bg-gray-800 text-white font-medium h-10 rounded-lg">
-                  <Clock size={16} className="mr-2" />
-                  Postpone
-                </Button>
+                {rec.recommended_action === 'WAIT' && (
+                  <div className="bg-green-100 border border-green-300 rounded-lg p-3 text-center">
+                    <p className="text-sm text-green-800 font-medium">✓ Stock is optimal - No action needed</p>
+                  </div>
+                )}
               </div>
-            </div>
-          </Card>
-        ))}
-      </div>
+            </Card>
+          ))}
+        </div>
+      )}
 
       {/* Footer Note */}
       <div className="mt-6 text-center">

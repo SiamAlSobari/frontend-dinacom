@@ -3,7 +3,7 @@
 import React from 'react'
 import { Bell, Lock, User, Zap } from 'lucide-react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import CardSubscribetionInfo from './CardSubscribetionInfo'
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuList, NavigationMenuTrigger } from '../shadcn-ui/navigation-menu'
 import { useSubscription } from '../stores/subscription'
@@ -11,6 +11,7 @@ import Image from 'next/image'
 
 export function DashboardHeader() {
   const pathname = usePathname()
+  const router = useRouter()
   const [showSubscriptionModal, setShowSubscriptionModal] = React.useState(false)
   const subscription = useSubscription()
   const isActive = (path: string) => {
@@ -31,6 +32,7 @@ export function DashboardHeader() {
       setShowSubscriptionModal(true)
     }
   }
+
 
   const navigationItem = [
     {
@@ -59,6 +61,8 @@ export function DashboardHeader() {
         <div className="flex items-center justify-between px-6 py-4">
 
           {/* Logo */}
+          <button onClick={() => router.push('/')}>
+
           <div className="flex items-center gap-3">
             <div className="bg-blue-600 p-2 rounded-lg">
               <Image src="/icons/inventa_icon_white.png" alt="Inventa Logo" width={24} height={24} />
@@ -68,6 +72,7 @@ export function DashboardHeader() {
               <p className="text-xs text-gray-500">Recomendations</p>
             </div>
           </div>
+          </button>
 
           {/* Navigation */}
           <nav className="flex items-center gap-8">
@@ -109,12 +114,14 @@ export function DashboardHeader() {
 
             {
               subscription ? (
-                <div className="flex items-center gap-2 px-3 py-1.5 bg-green-50 border border-green-200 rounded-md">
+                <button onClick={
+                  () => router.push('/pos')
+                } className="flex items-center gap-2 px-3 py-1.5 bg-green-50 border border-green-200 rounded-md">
                   <Zap className="w-5 h-5 text-green-400" />
                   <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                   <span className="text-sm font-medium text-green-700">POS: Active</span>
                   <span className="text-xs text-green-600 bg-green-100 px-2 py-0.5 rounded">30 Day Left</span>
-                </div>
+                </button>
               ) : (
                 <button
                   onClick={handleLockedClick}
