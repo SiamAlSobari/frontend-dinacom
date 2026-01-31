@@ -90,12 +90,12 @@ export default function LandingPageHeader() {
             </Link>
           ) : (
             <>
-              <Link href="/login">
+              <Link href="/auth">
                 <button className="px-5 py-2 bg-gray-100 text-gray-800 rounded-lg font-medium hover:bg-gray-200 transition">
                   Log in
                 </button>
               </Link>
-              <Link href="/subscribe">
+              <Link href="/billing">
                 <button className="px-5 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition">
                   Subscribe
                 </button>
@@ -179,7 +179,7 @@ export default function LandingPageHeader() {
                       </Link>
                       <Link
                         onClick={() => setOpen(false)}
-                        href="/subscribe"
+                        href="/billing"
                         className="block bg-blue-600 text-white text-center px-8 py-3 rounded-lg font-medium hover:bg-blue-700 transition text-lg"
                       >
                         Subscribe

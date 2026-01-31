@@ -305,7 +305,7 @@ export default function BillingPage() {
                             className="bg-blue-600 hover:bg-blue-500"
                             onClick={() => {
                               setIsDialogOpen(false);
-                              window.location.href = "/login"; // 👉 ganti kalau route login beda
+                              window.location.href = "/auth"; // 👉 ganti kalau route login beda
                             }}
                           >
                             Login Sekarang

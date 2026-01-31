@@ -1,8 +1,9 @@
 import axios from "axios";
 import type { AxiosRequestConfig } from "axios";
+import { API_URL } from "./load-env";
 
 const axiosInstance = axios.create({
-    baseURL:"http://localhost:3000",
+    baseURL: process.env.NEXT_PUBLIC_API_URL || API_URL,
     withCredentials: true,
 })
 
