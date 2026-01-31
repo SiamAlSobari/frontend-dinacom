@@ -109,12 +109,14 @@ export default function DashboardRootPage() {
   }
 
   const handleRunAiAnalysis = async () => {
+    // Get today's date
     const today = new Date()
-    const from = today.toISOString().split('T')[0]
-
-    const futureDate = new Date()
-    futureDate.setDate(futureDate.getDate() + 7)
-    const to = futureDate.toISOString().split('T')[0]
+    const to = today.toISOString().split('T')[0] // Format: YYYY-MM-DD
+    
+    // Get date 10 days ago
+    const pastDate = new Date()
+    pastDate.setDate(pastDate.getDate() - 10)
+    const from = pastDate.toISOString().split('T')[0] // Format: YYYY-MM-DD
 
     toast.promise(
       runAiAnalysis({ from, to }),
@@ -153,7 +155,7 @@ export default function DashboardRootPage() {
                   AI belum pernah dijalankan
                 </p>
                 <p className="text-xs text-yellow-700">
-                  Jalankan analisis AI untuk mendapatkan rekomendasi bisnis otomatis.
+                  Jalankan analisis AI untuk mendapatkan rekomendasi bisnis otomatis berdasarkan data 10 hari terakhir.
                 </p>
               </div>
             </div>
@@ -181,6 +183,7 @@ export default function DashboardRootPage() {
                   <span className="font-medium">
                     {formatIndoTime(aiRunsData.generated_at)}
                   </span>
+                  {' '}• Berdasarkan data 10 hari terakhir
                 </p>
               </div>
             </div>
