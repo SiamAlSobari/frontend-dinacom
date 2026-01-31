@@ -47,8 +47,8 @@ export function DashboardHeader() {
     },
     {
       name: "Atur Stock",
-      href: '/dashboard/stock/manage',
-      active: isActive('/dashboard/stock/manage'),
+      href: '/dashboard/stock/bulk',
+      active: isActive('/dashboard/stock/bulk '),
       description: 'Atur stok dan preferensi Anda',
     }
   ]
@@ -81,7 +81,7 @@ export function DashboardHeader() {
                   <NavigationMenuTrigger>Stock</NavigationMenuTrigger>
 
                   <NavigationMenuContent>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 w-[400px]">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 w-100">
                       {navigationItem.map((item) => (
                         <Link
                           key={item.name}

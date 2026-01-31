@@ -186,7 +186,7 @@ export default function RecordActivityPage() {
                     className="flex items-start gap-4 p-4 border-2 border-gray-100 rounded-xl hover:border-blue-200 hover:bg-blue-50/50 transition-all group"
                   >
                     {/* Icon */}
-                    <div className={`flex-shrink-0 w-12 h-12 ${config?.bgColor || 'bg-gray-100'} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                    <div className={`shrink-0 w-12 h-12 ${config?.bgColor || 'bg-gray-100'} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform`}>
                       <Icon className={`w-6 h-6 ${config?.color || 'text-gray-600'}`} />
                     </div>
 
@@ -196,7 +196,7 @@ export default function RecordActivityPage() {
                         <p className="text-sm font-medium text-gray-900 leading-relaxed">
                           {activity.activity_text}
                         </p>
-                        <span className={`flex-shrink-0 text-xs px-2 py-1 ${config?.bgColor || 'bg-gray-100'} ${config?.color || 'text-gray-600'} rounded-full font-medium`}>
+                        <span className={`shrink-0 text-xs px-2 py-1 ${config?.bgColor || 'bg-gray-100'} ${config?.color || 'text-gray-600'} rounded-full font-medium`}>
                           {config?.label || activity.activity_type}
                         </span>
                       </div>

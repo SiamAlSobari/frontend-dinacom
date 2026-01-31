@@ -1,11 +1,13 @@
 import React from 'react'
 import { Lock, Check, X } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
 interface CardSubscriptionInfoProps {
   onClose: () => void
 }
 
 export default function CardSubscribetionInfo({ onClose }: CardSubscriptionInfoProps) {
+  const router = useRouter()
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-3xl max-w-md w-full shadow-2xl relative overflow-hidden">
@@ -77,7 +79,9 @@ export default function CardSubscribetionInfo({ onClose }: CardSubscriptionInfoP
           </div>
 
           {/* Buttons */}
-          <div className="space-y-3">
+          <div className="space-y-3" onClick={
+            () => router.push('/billing')
+          }>
             <button className="w-full bg-blue-600 hover:bg-blue-700 font-[Poppins] text-white  py-3.5 rounded-xl transition-colors shadow-lg shadow-blue-500/30">
               Upgrade to unlock POS and Card recommendations
             </button>

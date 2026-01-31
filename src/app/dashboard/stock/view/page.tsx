@@ -5,6 +5,7 @@ import { Dialog, DialogTrigger } from "@/common/shadcn-ui/dialog";
 import { Plus, Search } from "lucide-react";
 import React from "react";
 import { CreateProductModal } from "@/features/dashboard/view-stock/create-product/CreateProductModal";
+import { UpdateProductModal } from "@/features/dashboard/view-stock/update-product/UpdateProductModal";
 import { ProductList } from "@/features/dashboard/view-stock/ProductList";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import ProductService from "@/services/ProductService";
@@ -30,8 +31,6 @@ export default function ViewStockPage() {
     queryKey: ["products", currentPage, limit],
     queryFn: () => ProductService.getProductPaginated(currentPage, limit),
   });
-
-
 
   const { mutateAsync: deleteProduct } = useMutation({
     mutationKey: ["delete-product"],
@@ -76,8 +75,6 @@ export default function ViewStockPage() {
     setSelectedProductId(null);
   };
 
-
-
   return (
     <>
       <ConfirmDialog
@@ -90,6 +87,13 @@ export default function ViewStockPage() {
         onClose={() => setSelectedProductId(null)}
         onConfirm={handleDelete}
       />
+
+      {selectedProduct && (
+        <UpdateProductModal
+          product={selectedProduct}
+          onClose={() => setSelectedProduct(null)}
+        />
+      )}
 
       <div className="p-4 sm:p-6 lg:p-10 min-h-screen bg-gray-50">
         {/* Header */}

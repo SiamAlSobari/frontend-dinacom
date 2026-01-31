@@ -4,10 +4,15 @@ import { Input } from "@/common/shadcn-ui/input"
 import { Search, ShoppingCart, Plus, Minus, X, DollarSign, Keyboard } from "lucide-react"
 import React from "react"
 import Image from "next/image"
-import { useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import ProductService from "@/services/ProductService"
 import { Product } from "@/common/response/product"
 import { PaymentModal } from "./components/PaymentModal"
+import "./pos-page.css"
+import TransactionService, { BulkTransactionPayload } from "@/services/TransactionService"
+import toast from "react-hot-toast"
+import { useSubscription } from "@/common/stores/subscription"
+import { useRouter } from "next/navigation"
 
 type CartItem = {
   product: Product
@@ -27,6 +32,13 @@ export default function POSPage() {
     queryKey: ['products-pos'],
     queryFn: () => ProductService.getProduct(),
   })
+  const router = useRouter()
+  const subscribe = useSubscription()
+  React.useEffect(() => {
+    if (!subscribe) {
+      router.replace('/billing')
+    }
+  }, [subscribe, router])
 
   const products = productData || []
 
@@ -53,18 +65,18 @@ export default function POSPage() {
 
   const addToCart = (product: Product) => {
     const stock = (product as any).stocks?.[0]?.stock_on_hand || 0
-    
+
     const existingItem = cart.find(item => item.product.id === product.id)
-    
+
     if (existingItem) {
       if (existingItem.quantity >= stock) {
-        alert("Stock tidak mencukupi!")
+        toast.error("Stock tidak mencukupi!")
         return
       }
       updateQuantity(product.id, existingItem.quantity + 1)
     } else {
       if (stock === 0) {
-        alert("Stock habis!")
+        toast.error("Stock tidak mencukupi!")
         return
       }
       setCart([...cart, {
@@ -85,7 +97,7 @@ export default function POSPage() {
       if (item.product.id === productId) {
         const stock = (item.product as any).stocks?.[0]?.stock_on_hand || 0
         if (newQuantity > stock) {
-          alert("Stock tidak mencukupi!")
+          toast.error("Stock tidak mencukupi!")
           return item
         }
         return {
@@ -106,7 +118,7 @@ export default function POSPage() {
   const saveQuantity = (productId: string) => {
     const newQty = parseInt(tempQuantity)
     if (isNaN(newQty) || newQty < 1) {
-      alert("Quantity harus lebih dari 0!")
+      toast.error("Jumlah tidak valid")
       setEditingItemId(null)
       return
     }
@@ -137,16 +149,51 @@ export default function POSPage() {
 
   const handleCheckout = () => {
     if (cart.length === 0) {
-      alert("Keranjang masih kosong!")
+      toast.error("Keranjang masih kosong!")
       return
     }
     setIsPaymentModalOpen(true)
   }
 
-  const handlePaymentSuccess = () => {
-    alert("Pembayaran berhasil! Terima kasih.")
-    setCart([])
+  const { mutateAsync: createTransaction } = useMutation({
+    mutationKey: ["create-transaction"],
+    mutationFn: TransactionService.bulkTransaction,
+    onSuccess: () => {
+      setCart([])
+    }
+  })
+
+
+  const buildBulkPayloadFromPOS = (
+    cart: CartItem[],
+    paymentMethod: string
+  ): BulkTransactionPayload => {
+    return {
+      items: cart.map(item => ({
+        product_id: item.product.id,
+        quantity: item.quantity,
+        unit_price: item.product.price,
+        trx_type: "SALE",
+        trx_date: new Date().toISOString(),
+        trx_method: paymentMethod, // CASH / QRIS
+      })),
+    }
   }
+  const handlePaymentSuccess = async (paymentMethod: "CASH" | "QRIS") => {
+    const payload = buildBulkPayloadFromPOS(cart, paymentMethod)
+
+    await toast.promise(
+      createTransaction(payload),
+      {
+        loading: "Memproses pembayaran...",
+        success: "Pembayaran berhasil!",
+        error: "Gagal memproses pembayaran",
+      }
+    )
+
+    setIsPaymentModalOpen(false)
+  }
+
 
   return (
     <div className="min-h-screen bg-gray-50 p-4 lg:p-6">
@@ -178,11 +225,10 @@ export default function POSPage() {
                     <button
                       key={category}
                       onClick={() => setSelectedCategory(category)}
-                      className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
-                        selectedCategory === category
+                      className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${selectedCategory === category
                           ? "bg-blue-600 text-white shadow-md"
                           : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                      }`}
+                        }`}
                     >
                       {category}
                     </button>
@@ -235,11 +281,10 @@ export default function POSPage() {
                         <span className="text-blue-600 font-bold">
                           Rp {product.price.toLocaleString('id-ID')}
                         </span>
-                        <span className={`text-xs px-2 py-0.5 rounded ${
-                          stock === 0 ? 'bg-red-100 text-red-700' :
-                          stock < 10 ? 'bg-orange-100 text-orange-700' :
-                          'bg-green-100 text-green-700'
-                        }`}>
+                        <span className={`text-xs px-2 py-0.5 rounded ${stock === 0 ? 'bg-red-100 text-red-700' :
+                            stock < 10 ? 'bg-orange-100 text-orange-700' :
+                              'bg-green-100 text-green-700'
+                          }`}>
                           {stock}
                         </span>
                       </div>
@@ -259,9 +304,9 @@ export default function POSPage() {
             )}
           </div>
 
-          {/* Cart Section - Same as before, keeping it unchanged */}
+          {/* Cart Section */}
           <div className="lg:col-span-1">
-            <Card className="sticky top-6 shadow-lg">
+            <Card className="sticky top-6 p-0 shadow-lg">
               <div className="p-4 border-b bg-gradient-to-r from-blue-600 to-blue-700">
                 <div className="flex items-center justify-between text-white">
                   <div className="flex items-center gap-2">
@@ -301,7 +346,7 @@ export default function POSPage() {
                     {cart.map((item) => (
                       <div key={item.product.id} className="border-2 border-gray-100 rounded-xl p-3 bg-gradient-to-br from-white to-gray-50 hover:border-blue-200 transition-all">
                         <div className="flex items-start gap-3 mb-3">
-                          <div className="w-14 h-14 bg-gray-200 rounded-lg flex-shrink-0 overflow-hidden">
+                          <div className="w-14 h-14 bg-gray-200 rounded-lg shrink-0 overflow-hidden">
                             {item.product.image_url && (
                               <Image
                                 src={item.product.image_url}
@@ -447,7 +492,10 @@ export default function POSPage() {
         isOpen={isPaymentModalOpen}
         onClose={() => setIsPaymentModalOpen(false)}
         total={total}
-        onPaymentSuccess={handlePaymentSuccess}
+        onPaymentSuccess={(
+          paymentMethod: "CASH" | "QRIS"
+        ) => handlePaymentSuccess(paymentMethod)}
+
       />
     </div>
   )

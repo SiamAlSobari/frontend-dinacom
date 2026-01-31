@@ -9,6 +9,7 @@ import ActivityService from "@/services/ActivityService"
 import TransactionService, { BulkTransactionPayload } from "@/services/TransactionService"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import React from "react"
+import toast from "react-hot-toast"
 
 export default function BulkTransactionPage() {
     const [rows, setRows] = React.useState<BulkRow[]>([
@@ -19,18 +20,12 @@ export default function BulkTransactionPage() {
     const [openTypeIndex, setOpenTypeIndex] = React.useState<number | null>(null)
     const [openMethodIndex, setOpenMethodIndex] = React.useState<number | null>(null)
 
-    const { mutate: bulkTransaction, isPending: isBulkTransactionPending } = useMutation({
+    const { mutateAsync: bulkTransaction, isPending: isBulkTransactionPending } = useMutation({
         mutationKey: ["bulk-transaction"],
         mutationFn: TransactionService.bulkTransaction,
-        onSuccess: () => {
-            alert("Bulk transaction successful!")
-        }
     })
 
-    const { data: activities} = useQuery({
-        queryKey: ['user-activities'],
-        queryFn: () => ActivityService.getActivities(),
-    })
+
 
     const handleAddRow = () => {
         setRows((prev) => [
@@ -57,7 +52,14 @@ export default function BulkTransactionPage() {
             }))
         }
 
-        bulkTransaction(payload) 
+        toast.promise(
+            bulkTransaction(payload),
+            {
+                loading: 'Submitting bulk transactions...',
+                success: 'Bulk transactions submitted successfully!',
+                error: 'Failed to submit bulk transactions.',
+            }
+        )
     }
 
 

@@ -1,13 +1,16 @@
 "use client"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/common/shadcn-ui/dialog"
+import TransactionService from "@/services/TransactionService"
+import { useMutation } from "@tanstack/react-query"
 import { Banknote, QrCode, Check, X, ArrowLeft } from "lucide-react"
 import { useState } from "react"
+import toast from "react-hot-toast"
 
 type PaymentModalProps = {
   isOpen: boolean
   onClose: () => void
   total: number
-  onPaymentSuccess: () => void
+  onPaymentSuccess: (paymentMethod: "CASH" | "QRIS") => void
 }
 
 type PaymentMethod = "cash" | "qris" | null
@@ -17,8 +20,10 @@ export function PaymentModal({ isOpen, onClose, total, onPaymentSuccess }: Payme
   const [cashAmount, setCashAmount] = useState("")
   const [isProcessing, setIsProcessing] = useState(false)
 
+
   const cashAmountNum = parseFloat(cashAmount) || 0
   const change = cashAmountNum - total
+
 
   const quickAmounts = [
     { label: "Uang Pas", value: total },
@@ -29,17 +34,19 @@ export function PaymentModal({ isOpen, onClose, total, onPaymentSuccess }: Payme
 
   const handlePayment = async () => {
     if (paymentMethod === "cash" && cashAmountNum < total) {
-      alert("Jumlah uang tidak mencukupi!")
+      toast.error("Jumlah uang tidak mencukupi.")
+
       return
     }
 
     setIsProcessing(true)
-    
+
     // Simulate payment processing
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    
+
     setIsProcessing(false)
-    onPaymentSuccess()
+    onPaymentSuccess(
+      paymentMethod === "cash" ? "CASH" : "QRIS"
+    )
     handleClose()
   }
 
@@ -71,7 +78,7 @@ export function PaymentModal({ isOpen, onClose, total, onPaymentSuccess }: Payme
 
         <div className="mt-2">
           {/* Total Amount Display */}
-          <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4 rounded-xl mb-4">
+          <div className="bg-linear-to-r from-blue-600 to-blue-700 text-white p-4 rounded-xl mb-4">
             <p className="text-xs opacity-90 mb-1">Total Pembayaran</p>
             <p className="text-2xl font-bold">Rp {total.toLocaleString('id-ID')}</p>
           </div>
@@ -146,14 +153,12 @@ export function PaymentModal({ isOpen, onClose, total, onPaymentSuccess }: Payme
 
               {/* Change Display */}
               {cashAmountNum > 0 && (
-                <div className={`p-3 rounded-xl ${
-                  change >= 0 ? 'bg-green-50 border-2 border-green-200' : 'bg-red-50 border-2 border-red-200'
-                }`}>
+                <div className={`p-3 rounded-xl ${change >= 0 ? 'bg-green-50 border-2 border-green-200' : 'bg-red-50 border-2 border-red-200'
+                  }`}>
                   <div className="flex justify-between items-center">
                     <span className="font-semibold text-sm text-gray-700">Kembalian</span>
-                    <span className={`text-xl font-bold ${
-                      change >= 0 ? 'text-green-600' : 'text-red-600'
-                    }`}>
+                    <span className={`text-xl font-bold ${change >= 0 ? 'text-green-600' : 'text-red-600'
+                      }`}>
                       Rp {Math.abs(change).toLocaleString('id-ID')}
                     </span>
                   </div>
@@ -166,7 +171,7 @@ export function PaymentModal({ isOpen, onClose, total, onPaymentSuccess }: Payme
               <button
                 onClick={handlePayment}
                 disabled={cashAmountNum < total || isProcessing}
-                className="w-full bg-gradient-to-r from-green-600 to-green-700 text-white py-3 rounded-xl font-bold hover:from-green-700 hover:to-green-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="w-full bg-linear-to-r from-green-600 to-green-700 text-white py-3 rounded-xl font-bold hover:from-green-700 hover:to-green-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 {isProcessing ? (
                   <>
@@ -208,7 +213,7 @@ export function PaymentModal({ isOpen, onClose, total, onPaymentSuccess }: Payme
               <button
                 onClick={handlePayment}
                 disabled={isProcessing}
-                className="w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white py-3 rounded-xl font-bold hover:from-purple-700 hover:to-purple-800 transition-all flex items-center justify-center gap-2"
+                className="w-full bg-linear-to-r from-purple-600 to-purple-700 text-white py-3 rounded-xl font-bold hover:from-purple-700 hover:to-purple-800 transition-all flex items-center justify-center gap-2"
               >
                 {isProcessing ? (
                   <>

@@ -9,11 +9,8 @@ interface CreateProductPayload {
     image: File | null;
 }
 
-
 class ProductService {
     public async createProduct(data: CreateProductPayload[]) {
-        // const response = await apiClient({ method: 'post', url: '/products', data: data });
-        // return response;
         for (let item of data) {
             const formData = new FormData();
             formData.append('name', item.name);
@@ -46,6 +43,17 @@ class ProductService {
         return response
     }
 
+    public async updateProduct(id: string, formData: FormData) {
+        const response = await apiClient({ 
+            method: 'put', 
+            url: `/products/${id}`, 
+            data: formData,
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+        return response
+    }
 }
 
 export default new ProductService();
